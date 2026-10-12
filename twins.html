@@ -1,0 +1,1717 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>COMP 211 Quiz 2 study guide</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231f6fa8'/%3E%3Ctext x='16' y='22' font-size='15' font-family='Menlo,monospace' font-weight='700' text-anchor='middle' fill='white'%3E*p%3C/text%3E%3C/svg%3E">
+<style>
+:root {
+  --bg: #f5f6f8; --card: #ffffff; --ink: #1a1f26; --muted: #5d6673; --line: #dfe3e8; --soft: #eef1f5;
+  --accent: #1f6fa8; --accent-ink: #ffffff; --accent-soft: #e4f0f9;
+  --ok: #1b7f4b; --ok-soft: #e3f4ea; --no: #b3261e; --no-soft: #fbe9e7; --mid: #9a6700; --mid-soft: #fff4d6;
+  --code-bg: #f3f4f7; --code-ink: #1f2430; --tok-c: #6b7785; --tok-s: #a3442c; --tok-k: #7a3fb5; --tok-n: #0b6e99; --tok-p: #9a6700;
+  --radius: 12px; --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12151a; --card: #1b1f26; --ink: #e8ebf0; --muted: #9aa4b2; --line: #2e343d; --soft: #232831;
+    --accent: #6cb6ea; --accent-ink: #0c1620; --accent-soft: #1c2f40;
+    --ok: #5fcf8f; --ok-soft: #163324; --no: #ff8a80; --no-soft: #3a1c1a; --mid: #f0c060; --mid-soft: #3a2f12;
+    --code-bg: #14171c; --code-ink: #e3e7ee; --tok-c: #8490a0; --tok-s: #f0a58c; --tok-k: #c8a2f5; --tok-n: #7fd1f0; --tok-p: #f0c060;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12151a; --card: #1b1f26; --ink: #e8ebf0; --muted: #9aa4b2; --line: #2e343d; --soft: #232831;
+  --accent: #6cb6ea; --accent-ink: #0c1620; --accent-soft: #1c2f40;
+  --ok: #5fcf8f; --ok-soft: #163324; --no: #ff8a80; --no-soft: #3a1c1a; --mid: #f0c060; --mid-soft: #3a2f12;
+  --code-bg: #14171c; --code-ink: #e3e7ee; --tok-c: #8490a0; --tok-s: #f0a58c; --tok-k: #c8a2f5; --tok-n: #7fd1f0; --tok-p: #f0c060;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-padding-top: 64px; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16.5px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+a { color: var(--accent); }
+[hidden] { display: none !important; }
+
+.topbar { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+.topbar-in { max-width: 860px; margin: 0 auto; padding: 8px 16px; display: flex; align-items: center; gap: 6px 14px; flex-wrap: wrap; }
+.brand { font-weight: 700; color: var(--ink); text-decoration: none; margin-right: auto; white-space: nowrap; }
+.topnav { display: flex; gap: 2px; flex-wrap: wrap; }
+.topnav a { color: var(--muted); text-decoration: none; padding: 4px 9px; border-radius: 8px; font-size: 14.5px; white-space: nowrap; }
+.topnav a:hover, .topnav a.on { color: var(--ink); background: var(--soft); }
+.save-badge, #theme { font: inherit; font-size: 13px; color: var(--muted); background: none; border: 1px solid var(--line); border-radius: 999px; padding: 3px 10px; cursor: pointer; white-space: nowrap; }
+.save-badge.file { color: var(--ok); border-color: var(--ok); }
+.save-badge.pending { color: var(--mid); border-color: var(--mid); }
+
+main { max-width: 860px; margin: 0 auto; padding: 22px 16px 90px; }
+h1 { font-size: clamp(25px, 4.4vw, 33px); line-height: 1.2; margin: 6px 0 10px; letter-spacing: -0.01em; text-wrap: balance; }
+h2 { font-size: 22px; line-height: 1.25; margin: 0 0 10px; }
+h3 { font-size: 17px; margin: 18px 0 6px; }
+.eyebrow { font-size: 13px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--accent); }
+.lede { color: var(--muted); margin: 0 0 14px; max-width: 62ch; }
+.muted { color: var(--muted); font-size: 14.5px; }
+.back { font-size: 14.5px; text-decoration: none; display: inline-block; margin-bottom: 8px; }
+
+.hero { padding: 6px 0 4px; }
+.hero-row { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; margin-top: 6px; }
+.meters { display: grid; grid-template-columns: repeat(2, minmax(150px, 1fr)); gap: 14px; flex: 1; min-width: 280px; }
+.meter-top { display: flex; justify-content: space-between; font-size: 14px; color: var(--muted); }
+.meter-top b { color: var(--ink); font-variant-numeric: tabular-nums; }
+.meter-sub { font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+.bar { display: block; height: 7px; background: var(--soft); border-radius: 99px; overflow: hidden; }
+.bar > span { display: block; height: 100%; background: var(--accent); border-radius: 99px; transition: width 0.3s; }
+
+.tools, .drill-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 22px 0 8px; }
+.drill-grid { grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+.tool { display: flex; flex-direction: column; gap: 2px; padding: 11px 13px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); text-decoration: none; color: var(--ink); }
+.tool:hover { border-color: var(--accent); }
+.tool span { font-size: 13.5px; color: var(--muted); line-height: 1.35; }
+.drill-stat { margin-top: 6px; font-variant-numeric: tabular-nums; }
+
+.list-title { margin: 26px 0 6px; }
+.route { margin: 0 0 12px; font-size: 14.5px; color: var(--muted); }
+.route b { color: var(--ink); } .route a { font-weight: 700; }
+.sec-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 9px; }
+.sec-card { display: grid; grid-template-columns: 38px 1fr 150px; gap: 12px; align-items: center; padding: 13px 15px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); text-decoration: none; color: var(--ink); }
+.sec-card:hover { border-color: var(--accent); }
+.sec-n { width: 34px; height: 34px; border-radius: 50%; background: var(--soft); display: grid; place-items: center; font-weight: 700; font-variant-numeric: tabular-nums; }
+.sec-card.done .sec-n { background: var(--ok-soft); color: var(--ok); }
+.sec-main { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.sec-title { font-weight: 650; line-height: 1.3; }
+.star { font-size: 11.5px; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; color: var(--mid); background: var(--mid-soft); border-radius: 99px; padding: 1px 8px; margin-left: 8px; white-space: nowrap; vertical-align: 2px; }
+.sec-blurb { font-size: 14.5px; color: var(--muted); line-height: 1.4; }
+.sec-meta { font-size: 12.5px; color: var(--muted); opacity: 0.85; }
+.sec-prog { display: flex; flex-direction: column; gap: 5px; }
+.sec-count { font-size: 12.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.foot { margin-top: 30px; font-size: 13.5px; color: var(--muted); }
+
+.sec-head { margin-bottom: 14px; }
+.rail { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+.rail-step { min-width: 34px; height: 34px; padding: 0 10px; display: grid; place-items: center; border-radius: 99px; border: 1px solid var(--line); background: var(--card); color: var(--muted); text-decoration: none; font-size: 14px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.rail-step.done { background: var(--ok-soft); border-color: transparent; color: var(--ok); }
+.rail-step.cur { border-color: var(--accent); color: var(--accent); box-shadow: 0 0 0 2px var(--accent-soft); }
+
+.read { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 22px 12px; }
+.read-label, .qs-label { font-size: 12.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); margin-bottom: 4px; }
+.qs-label { margin: 24px 0 8px; color: var(--muted); }
+.qs { display: grid; gap: 14px; }
+.skip { display: inline-block; margin-top: 16px; font-size: 14px; color: var(--muted); }
+
+.md > :first-child { margin-top: 0; }
+.md > :last-child { margin-bottom: 0; }
+.md p { margin: 0 0 12px; }
+.md ul, .md ol { margin: 0 0 12px; padding-left: 24px; }
+.md li { margin: 3px 0; }
+.md li > ul, .md li > ol { margin: 3px 0; }
+.md h4 { font-size: 16.5px; margin: 18px 0 6px; }
+.md code { font-family: var(--mono); font-size: 0.9em; background: var(--code-bg); border-radius: 5px; padding: 1px 5px; overflow-wrap: anywhere; }
+.md pre.code { background: var(--code-bg); color: var(--code-ink); border: 1px solid var(--line); border-radius: 9px; padding: 12px 14px; overflow-x: auto; margin: 0 0 12px; font: 14px/1.5 var(--mono); tab-size: 4; }
+.md pre.code code { background: none; padding: 0; font-size: inherit; overflow-wrap: normal; white-space: pre; }
+.tok-c { color: var(--tok-c); font-style: italic; } .tok-s { color: var(--tok-s); } .tok-k { color: var(--tok-k); } .tok-n { color: var(--tok-n); } .tok-p, .tok-v { color: var(--tok-p); }
+.tbl { overflow-x: auto; margin: 0 0 12px; }
+.md table { border-collapse: collapse; font-size: 15px; min-width: 50%; }
+.md th, .md td { border: 1px solid var(--line); padding: 5px 10px; text-align: left; vertical-align: top; }
+.md th { background: var(--soft); font-weight: 650; font-size: 14px; }
+.callout { margin: 0 0 12px; padding: 10px 14px; border-left: 4px solid var(--accent); background: var(--accent-soft); border-radius: 0 9px 9px 0; }
+.callout.trap { border-color: var(--no); background: var(--no-soft); }
+.callout.rule { border-color: var(--ok); background: var(--ok-soft); }
+.callout.paper { border-color: var(--mid); background: var(--mid-soft); }
+.callout.lecture { border-color: var(--muted); background: var(--soft); }
+.md.inline, .md.inline p { display: inline; margin: 0; }
+
+.q-card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 18px; scroll-margin-top: 70px; }
+.q-card.is-right { border-color: var(--ok); } .q-card.is-wrong { border-color: var(--no); } .q-card.is-mid { border-color: var(--mid); }
+.q-head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.q-num { font-size: 12.5px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); }
+.q-prev { font-size: 12px; border-radius: 99px; padding: 0 8px; }
+.q-prev.ok { background: var(--ok-soft); color: var(--ok); } .q-prev.no { background: var(--no-soft); color: var(--no); }
+.flag-btn { margin-left: auto; font: inherit; font-size: 13px; color: var(--muted); background: none; border: 1px solid transparent; border-radius: 8px; padding: 1px 8px; cursor: pointer; }
+.flag-btn:hover { border-color: var(--line); } .flag-btn.on { color: var(--mid); border-color: var(--mid); }
+.flag-row { margin-bottom: 10px; }
+.flag-note { width: 100%; font: inherit; font-size: 14px; padding: 6px 10px; border: 1px solid var(--mid); border-radius: 8px; background: var(--card); color: var(--ink); }
+.q-text { margin-bottom: 12px; }
+
+.opts { display: grid; gap: 8px; }
+.opt { display: flex; gap: 11px; align-items: baseline; text-align: left; width: 100%; font: inherit; color: var(--ink); background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 9px 12px; cursor: pointer; }
+.opt:hover:not(:disabled) { border-color: var(--accent); background: var(--accent-soft); }
+.opt:disabled { cursor: default; opacity: 1; color: var(--ink); }
+.opt-key { flex: none; font-size: 12.5px; font-weight: 700; color: var(--muted); width: 14px; }
+.opt-text code { font-family: var(--mono); font-size: 0.9em; background: var(--code-bg); border-radius: 5px; padding: 1px 5px; }
+.opt.sel { border-color: var(--accent); background: var(--accent-soft); }
+.opt.correct { border-color: var(--ok); background: var(--ok-soft); }
+.opt.incorrect { border-color: var(--no); background: var(--no-soft); }
+
+.short-row { display: flex; align-items: center; gap: 8px; }
+.ans-input { font: 15.5px var(--mono); width: 100%; max-width: 420px; padding: 8px 11px; border: 1.5px solid var(--line); border-radius: 9px; background: var(--card); color: var(--ink); }
+.ans-input:focus, .self-input:focus, .flag-note:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+.ans-input.good { border-color: var(--ok); background: var(--ok-soft); } .ans-input.bad { border-color: var(--no); background: var(--no-soft); }
+.ans-input:disabled { opacity: 1; color: var(--ink); -webkit-text-fill-color: var(--ink); }
+.mark { width: 18px; font-weight: 700; flex: none; } .mark.ok { color: var(--ok); } .mark.no { color: var(--no); }
+.fix { font-size: 14px; color: var(--muted); white-space: nowrap; }
+.fix code { font-family: var(--mono); background: var(--ok-soft); color: var(--ok); border-radius: 5px; padding: 1px 6px; }
+.blanks { display: grid; gap: 8px; }
+.blank { display: grid; grid-template-columns: minmax(120px, 44%) 1fr; gap: 10px; align-items: center; }
+.blank-label { font-size: 15px; } .blank-label code { font-family: var(--mono); font-size: 0.9em; background: var(--code-bg); border-radius: 5px; padding: 1px 5px; }
+.blank-in { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.blank-in .ans-input { max-width: 300px; }
+.self-input { width: 100%; font: 14.5px/1.5 var(--mono); padding: 10px 12px; border: 1.5px solid var(--line); border-radius: 9px; background: var(--card); color: var(--ink); resize: vertical; tab-size: 4; }
+.actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+.try-again { margin-top: 8px; font-size: 14.5px; color: var(--no); }
+.hint { margin-top: 6px; font-size: 14.5px; color: var(--muted); }
+
+.btn { font: inherit; font-size: 15px; font-weight: 600; color: var(--ink); background: var(--soft); border: 1px solid var(--line); border-radius: 9px; padding: 7px 14px; cursor: pointer; text-decoration: none; display: inline-block; }
+.btn:hover:not(:disabled) { border-color: var(--accent); }
+.btn:disabled { opacity: 0.45; cursor: default; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn.primary:hover { filter: brightness(1.08); }
+.btn.big { font-size: 16.5px; padding: 10px 18px; }
+.btn.ghost { background: none; }
+.btn.good { background: var(--ok-soft); border-color: var(--ok); color: var(--ok); }
+.btn.mid { background: var(--mid-soft); border-color: var(--mid); color: var(--mid); }
+.btn.bad { background: var(--no-soft); border-color: var(--no); color: var(--no); }
+.btn:focus-visible, .opt:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.q-fb { margin-top: 14px; padding-top: 12px; border-top: 1px dashed var(--line); }
+.verdict { font-weight: 700; margin-bottom: 6px; } .verdict.ok { color: var(--ok); } .verdict.no { color: var(--no); } .verdict.mid { color: var(--mid); }
+.ans { margin-bottom: 6px; } .ans > span { color: var(--muted); }
+.why { font-size: 15.5px; }
+.next-btn { margin-top: 12px; }
+.model { margin-top: 12px; padding: 12px 14px; background: var(--soft); border-radius: 10px; }
+.model-label { font-size: 12.5px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); margin: 8px 0 6px; }
+.model-label:first-child { margin-top: 0; }
+.rubric { list-style: none; padding: 0; margin: 0 0 10px; display: grid; gap: 4px; }
+.rubric label { display: flex; gap: 8px; align-items: baseline; cursor: pointer; }
+.rubric code { font-family: var(--mono); font-size: 0.9em; background: var(--code-bg); border-radius: 5px; padding: 1px 5px; }
+.self-grade { display: flex; gap: 8px; flex-wrap: wrap; }
+
+.quiz-prog { display: flex; align-items: center; gap: 12px; font-size: 14px; color: var(--muted); margin: 6px 0 12px; font-variant-numeric: tabular-nums; }
+.quiz-prog .bar { flex: 1; }
+.result { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; text-align: center; }
+.result.left { text-align: left; }
+.result.left .result-actions { justify-content: flex-start; }
+.score { font-size: 44px; font-weight: 800; font-variant-numeric: tabular-nums; line-height: 1.1; }
+.result-actions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin: 14px 0 4px; }
+.miss-list { text-align: left; font-size: 14.5px; color: var(--muted); margin: 10px auto; max-width: 60ch; }
+.miss-secs { list-style: none; padding: 0; margin: 16px 0 0; display: grid; gap: 8px; }
+.miss-secs li { display: flex; justify-content: space-between; align-items: center; gap: 10px; background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 9px 13px; }
+.cheat { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 18px; margin-bottom: 10px; break-inside: avoid; }
+.cheat h3 { margin: 0 0 6px; } .cheat h3 a { color: var(--ink); text-decoration: none; }
+.cheat ul { margin: 0; padding-left: 20px; } .cheat li { margin: 4px 0; }
+.cheat code { font-family: var(--mono); font-size: 0.9em; background: var(--code-bg); border-radius: 5px; padding: 1px 5px; }
+.clock { position: sticky; top: 52px; z-index: 5; width: max-content; margin: 0 0 12px auto; background: var(--card); border: 1px solid var(--line); border-radius: 99px; padding: 3px 12px; font: 600 14px var(--mono); }
+.clock.over { color: var(--no); border-color: var(--no); }
+.mock-score { background: var(--accent-soft); border-radius: var(--radius); padding: 14px 18px; font-size: 20px; font-weight: 700; margin-bottom: 14px; }
+.toast { position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 8px 16px; border-radius: 99px; font-size: 14.5px; z-index: 20; }
+
+@media (max-width: 640px) {
+  body { font-size: 16px; }
+  .sec-card { grid-template-columns: 34px 1fr; }
+  .sec-prog { grid-column: 2; }
+  .read { padding: 16px 15px 8px; }
+  .q-card { padding: 14px 14px; }
+  .blank { grid-template-columns: 1fr; gap: 4px; }
+  .star { display: inline-block; margin-left: 0; }
+}
+@media print {
+  .topbar, .back, .foot { display: none; }
+  body { background: #fff; }
+}
+
+.signin-note { display: block; margin: 18px 0 0; padding: 11px 14px; border: 1px solid var(--mid); background: var(--mid-soft); color: var(--ink); border-radius: var(--radius); text-decoration: none; }
+.login { margin-bottom: 14px; }
+.login-form { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.login-form .ans-input { max-width: 220px; font-family: inherit; }
+
+</style>
+</head>
+<body>
+<div class="topbar"><div class="topbar-in">
+  <a class="brand" href="#/">COMP 211 · Quiz 2</a>
+  <nav class="topnav">
+    <a href="#/">Sections</a>
+    <a href="#/drills">Drills</a>
+    <a href="#/missed" id="nav-missed">Missed</a>
+    <a href="#/mock">Mock</a>
+    <a href="#/cheats">Rules</a>
+  </nav>
+  <button id="save-badge" class="save-badge" type="button" title="How your progress is saved">💾 Saved in this browser</button>
+  <button id="theme" type="button" title="Light / dark">◐</button>
+</div></div>
+<main id="app"><noscript>This study guide needs JavaScript.</noscript></main>
+<script>window.__DATA__ = {"quizAt": "2026-10-14T10:10:00-04:00", "high": [], "route": [], "key": "comp211-quiz2-twins-v1", "title": "COMP 211 · Quiz 2: the practice sets, new numbers", "sections": [{"id": "practice-twins", "title": "Start here: the 9 practice sets, new numbers", "blurb": "One part per official practice set: the 1–4 facts it needs, one worked example, then the same questions with different numbers. Do this, then do the real sets on paper.", "objective": "All five objectives, at practice-set depth", "sources": "The nine Quiz 2 practice sets · TA review session", "minutes": 100, "cheats": ["Float: normal = `1.f` × 2^{stored − bias}; denormal (exponent all 0s) = `0.f` × 2^{1 − bias}; exponent all 1s = infinity or NaN. Answer in fractions.", "Encoding: normalize, add the bias. If the stored exponent comes out 0 or negative, it's denormalized.", "`&a[i] = base + i × sizeof`. Little-endian: right-hand byte at the lowest address.", "Diagram: check the row size, RA first, array index 0 at the **lowest** address, pointer rows hold addresses, cross out a frame when it returns.", "`p[i]` = `*(p + i)`, counted from where `p` points. Pointer − pointer = elements, not bytes.", "Leak = never freed and unreachable. Double free = freed twice. Use after free = used after `free`. Dangling = points at something whose lifetime ended.", "Low → high: OS, text, data, heap (grows up), stack (grows down). Data = globals, statics, string literals.", "2D: index = row × columns + column. Method 2: `malloc` the row pointers, `malloc` each row, free rows then the outer array.", "make: default = first target; rebuild only if missing or older than a dependency. bash: `?` one character, `*` any, `[0-9]` one digit; loop runs once per match."], "chunks": [{"id": "t-fp", "title": "Floating point (practice set: Floating Point)", "read": "**Must know (3 things):**\n\n1. **Normal** (exponent bits not all 0s, not all 1s): value = ±`1.fraction` × 2^{stored − bias}.\n2. **Denormalized** (exponent bits all 0s, fraction not 0): value = ±`0.fraction` × 2^{1 − bias}. The exponent is always **1 − bias**, never 0 − bias.\n3. Exponent all 1s = ±infinity (fraction 0) or NaN (fraction not 0). All 0s everywhere = zero. The TAs expect this special-cases table to be printed on the quiz.\n\n> **On paper:** answer in **fractions**, not decimals (the TAs said so), and check the sign bit last.\n\n### Worked: this part's format\n\nFormat: **1 sign bit, 3 exponent bits (bias 3), 5 fraction bits** (9 bits). Bias 3, so the denormalized exponent is 1 − 3 = **−2**.\n\n**Decode `1 101 01000`.** Sign 1, so negative. Exponent `101` = 5, and 5 − 3 = 2. Significand `1.01000`. Move the point right 2: `101.0` = 5. Answer **−5**.\n\n**Decode `0 000 10100`.** Exponent all 0s, fraction not 0, so denormalized: `0.10100` × 2^{−2}. Move the point left 2: `0.00101` = 1/8 + 1/32 = **5/32**.\n\n**Encode 6.5.** Binary `110.1`. Normalize: `1.101` × 2^{2}. Stored exponent = 2 + 3 = 5 = `101`. Fraction = bits after the point, padded: `10100`. Answer `0 101 10100`.\n\n**Encode 3/64.** Binary `0.000011`. Normalizing gives `1.1` × 2^{−5}, stored exponent −5 + 3 = −2. **Zero or negative means it has to be denormalized.** Rewrite with the fixed exponent −2: `0.0011` × 2^{−2}. Fraction `00110`, exponent `000`. Answer `0 000 00110`.\n\n**Extremes** (the four that are always asked):\n\n| | bits | why |\n|---|---|---|\n| smallest positive normal | `0 001 00000` | exponent can't be `000` |\n| largest normal | `0 110 11111` | exponent can't be `111` |\n| smallest positive denormal | `0 000 00001` | fraction can't be 0 |\n| largest denormal | `0 000 11111` | |\n", "questions": [{"id": "fp-dec-norm", "type": "blanks", "q": "Format: **1 sign bit, 3 exponent bits (bias 3), 5 fraction bits** (9 bits).\n\nDecode `0 110 11000`.", "blanks": [{"label": "true exponent (stored − bias)", "mode": "num", "accept": ["3"]}, {"label": "value", "mode": "num", "accept": ["14"]}], "why": "Exponent `110` = 6, 6 − 3 = 3. `1.11000` × 2^{3} = `1110.0` = **14**. Forgetting the hidden 1 gives 6."}, {"id": "fp-dec-den", "type": "short", "mode": "num", "q": "Format: **1 sign bit, 3 exponent bits (bias 3), 5 fraction bits** (9 bits).\n\nDecode `1 000 01100`. Answer as a fraction.", "accept": ["-3/32"], "why": "Exponent all 0s, so denormalized: −`0.01100` × 2^{−2} = −`0.00011` = −(1/16 + 1/32) = **−3/32**. Using a hidden 1, or exponent 0 − 3, are the two usual mistakes.", "placeholder": "-a/b"}, {"id": "fp-enc-norm", "type": "short", "mode": "bits", "q": "Format: **1 sign bit, 3 exponent bits (bias 3), 5 fraction bits** (9 bits).\n\nEncode **11.5**. Type all 9 bits.", "accept": ["011001110"], "why": "11.5 = `1011.1` = `1.0111` × 2^{3}. Stored exponent 3 + 3 = 6 = `110`. Fraction = `0111` padded to 5 bits = `01110`. Answer `0 110 01110`. Writing the fraction as `10111` (keeping the leading 1) is the usual mistake.", "placeholder": "9 bits"}, {"id": "fp-enc-den", "type": "short", "mode": "bits", "q": "Format: **1 sign bit, 3 exponent bits (bias 3), 5 fraction bits** (9 bits).\n\nEncode **5/128**. Type all 9 bits.", "accept": ["000000101"], "why": "5/128 = 4/128 + 1/128 = `0.0000101`. Normalized it would be `1.01` × 2^{−5}, stored exponent −2, not allowed, so denormalized. With exponent −2: `0.00101` × 2^{−2}. Fraction `00101`, exponent `000`: `0 000 00101`."}, {"id": "fp-extremes", "type": "blanks", "q": "Format: **1 sign bit, 3 exponent bits (bias 3), 5 fraction bits** (9 bits).\n\nGive each value (fraction or decimal).", "blanks": [{"label": "smallest positive normalized", "mode": "num", "accept": ["1/4"]}, {"label": "largest normalized", "mode": "num", "accept": ["63/4"]}, {"label": "smallest positive denormalized", "mode": "num", "accept": ["1/128"]}, {"label": "largest denormalized", "mode": "num", "accept": ["31/128"]}], "why": "`0 001 00000` = 1.0 × 2^{−2} = **1/4**. `0 110 11111` = `1.11111` × 2^{3} = `1111.11` = 15 + 3/4 = **63/4**. `0 000 00001` = `0.00001` × 2^{−2} = 2^{−7} = **1/128**. `0 000 11111` = `0.11111` × 2^{−2} = **31/128**."}]}, {"id": "t-bytes", "title": "Byte addresses and little-endian (practice set: Byte Addresses)", "read": "**Must know (2 things):**\n\n1. **Address of element i = base + i × sizeof(element).** Do `i × size` in decimal, turn it into hex, then add.\n2. **Little-endian: the least significant byte (the right-hand two hex digits) sits at the lowest address.**\n\n### Worked: element addresses\n\nA 30-element `int` array starts at `0xBBBB00005008`, `sizeof(int)` = 4.\n\n- Element 6: 6 × 4 = 24 = `0x18`. `0x5008 + 0x18 = 0x5020`, so `0xBBBB00005020`.\n- Hex add, one column at a time: 8 + 8 = 16 = `0x10`, write 0 carry 1. 0 + 1 + 1 = 2. So `…5020`.\n- An `int` takes 4 addresses: element 6 lives at `…5020`, `…5021`, `…5022`, `…5023`.\n\n### Worked: reading bytes out of a dump\n\n| Address | Data (4 bytes) |\n|---|---|\n| `0xCCCC00002000` | `0x7A31C09E` |\n| `0xCCCC00002004` | `0x15B2D8F4` |\n| `0xCCCC00002008` | `0xE6094C27` |\n\nEach row is one 4-byte value; the address on the left is the address of its **first (lowest) byte**.\n\n- The 4-byte value at `…2004` is just the row: `0x15B2D8F4`.\n- Split it into bytes, **right to left**: `F4` is at `…2004`, `D8` at `…2005`, `B2` at `…2006`, `15` at `…2007`.\n- So the byte at `…2006` is `0xB2`. For an address that isn't a row start, find its row first: `…200B` is in the `…2008` row, offset 3, the leftmost byte: `0xE6`.\n\n> **Trap:** reading left to right (`15` first) is big-endian. Lowest address gets the **right-hand** byte.\n", "questions": [{"id": "ba-elems", "type": "blanks", "q": "A 30-element `int` array starts at `0xBBBB00005008`, `sizeof(int)` = 4. Give the address of each element.", "blanks": [{"label": "element 1", "mode": "hex", "accept": ["0xBBBB0000500C"]}, {"label": "element 12", "mode": "hex", "accept": ["0xBBBB00005038"]}, {"label": "element 25", "mode": "hex", "accept": ["0xBBBB0000506C"]}], "why": "1 × 4 = 4: `0xBBBB0000500C`. 12 × 4 = 48 = `0x30`: `0xBBBB00005038`. 25 × 4 = 100 = `0x64`: `0xBBBB0000506C`. Adding decimal 48 or 100 to the hex digits is the usual mistake."}, {"id": "ba-last-byte", "type": "short", "mode": "hex", "q": "Same array (base `0xBBBB00005008`, 4-byte ints). What is the **last** (highest) byte address that element 3 occupies?", "accept": ["0xBBBB00005017"], "why": "Element 3 starts at base + 12 = `0xBBBB00005014` and covers 4 addresses: `…5014` to **`…5017`**."}, {"id": "ba-dump", "type": "blanks", "q": "Little-endian machine.\n\n| Address | Data (4 bytes) |\n|---|---|\n| `0xCCCC00002000` | `0x7A31C09E` |\n| `0xCCCC00002004` | `0x15B2D8F4` |\n| `0xCCCC00002008` | `0xE6094C27` |\n\nGive the hex value of each **byte**.", "blanks": [{"label": "byte at 0xCCCC00002000", "mode": "hex", "accept": ["9E"]}, {"label": "byte at 0xCCCC00002001", "mode": "hex", "accept": ["C0"]}, {"label": "byte at 0xCCCC00002007", "mode": "hex", "accept": ["15"]}, {"label": "byte at 0xCCCC0000200A", "mode": "hex", "accept": ["09"]}], "why": "Row `…2000` = `7A 31 C0 9E`: lowest address gets the right-hand byte, so `…2000` = **9E**, `…2001` = **C0**. `…2007` is the top byte of the `…2004` row: **15**. `…200A` is offset 2 in the `…2008` row `E6 09 4C 27`: **09**."}, {"id": "ba-split", "type": "mc", "q": "A diagram has **4-byte rows**. An `int64_t` holding 100 starts at `0x…F010`. What goes in the rows?", "options": ["`…F010`: 100 and `…F014`: 0", "`…F010`: 0 and `…F014`: 100", "`…F010`: 100 and `…F014`: 100", "`…F010`: 50 and `…F014`: 50"], "answer": 0, "why": "An 8-byte value needs two 4-byte rows. 100 fits in the low half, the high half is all zeros, and little-endian puts the **low half at the lower address**. The TAs said this is the form little-endian would take on a diagram question."}]}, {"id": "t-lowlevel", "title": "Low-level memory diagrams (practice set: Low-Level Memory Diagrams)", "read": "**Must know (4 things):**\n\n1. **Look at the row size first** (how far apart the addresses are). The practice sets all use 8-byte rows, and `int64_t` and every pointer are 8 bytes, so one thing per row.\n2. **Stack fills downward** from the frame's start address. First row = **RA** (0 for `main`), then locals in the order declared.\n3. **Arrays look upside down: index 0 is at the lowest address.** A 4-element array takes the next 4 rows and `a[0]` is the bottom one.\n4. **A pointer row holds an address.** `p = a` stores the address of `a[0]`. Pointer − pointer = number of **elements** apart, not bytes.\n\n### Worked: one frame\n\n```c\n 1  int main() {\n 2    int64_t a[] = {3, 6, 9, 12};\n 3    int64_t* p = a;\n 4\n 5    p[1] = 60;\n 6    *(p + 3) = 70;\n 7    a[0] = &a[3] - &a[1];\n 8    a[2] = (int64_t) p;\n 9  }\n```\n\n`main` starts at `0xFFFFBBBB0060`. Lay out the rows first, then run the code.\n\n| Address | Contents | Variable |\n|---|---|---|\n| `0xFFFFBBBB0060` | 0 | RA |\n| `0xFFFFBBBB0058` | 12, then 70 | a[3] |\n| `0xFFFFBBBB0050` | 9, then `0xFFFFBBBB0040` | a[2] |\n| `0xFFFFBBBB0048` | 6, then 60 | a[1] |\n| `0xFFFFBBBB0040` | 3, then 2 | a[0] |\n| `0xFFFFBBBB0038` | `0xFFFFBBBB0040` | p |\n\nLine 7: `&a[3] − &a[1]` is 16 bytes apart, 16 / 8 = **2** elements. Line 8 stores the address held in `p`.\n\n### A function call (practice diagram 2)\n\nEach call adds, below the caller's rows: the caller's **RV(callee)** slot, then the callee's **parameters and RA**, then its locals. Label every row `function: name`. Library calls use `arg0`, `arg1`. **RA = the line number of the call.** When a function returns, **cross out its rows** and write the return value in the RV slot.\n\n> **Check this one:** the official answer key puts the callee's **RA above its parameters, first parameter lowest**. Lecture's slides say parameters first, then RA. Ask a TA which one is graded. The questions below don't depend on it.\n", "questions": [{"id": "ll-one-frame", "type": "blanks", "q": "`main`'s frame starts at `0xFFFFAAAA0080`. Every row is 8 bytes.\n\n```c\nint main() {\n  int64_t v[] = {4, 8, 12};\n  int64_t* q = v;\n\n  q[2] = 90;\n  *(q + 1) = &v[2] - &v[0];\n  v[0] = (int64_t) (q + 1);\n}\n```\n\nGive the **final** contents of each row.", "blanks": [{"label": "0xFFFFAAAA0080", "mode": "num", "accept": ["0"]}, {"label": "0xFFFFAAAA0078", "mode": "num", "accept": ["90"]}, {"label": "0xFFFFAAAA0070", "mode": "num", "accept": ["2"]}, {"label": "0xFFFFAAAA0068 (hex)", "mode": "hex", "accept": ["0xFFFFAAAA0070"]}, {"label": "0xFFFFAAAA0060 (hex)", "mode": "hex", "accept": ["0xFFFFAAAA0068"]}], "why": "Rows: `…0080` RA = 0, `…0078` v[2], `…0070` v[1], `…0068` v[0], `…0060` q. `q` = address of v[0] = `…0068`. `q[2]` → v[2] = 90. `&v[2] − &v[0]` = 2 elements → v[1] = 2. `q + 1` = `…0068` + 8 = `…0070` → v[0]. Putting v[0] in the top row is the usual mistake."}, {"id": "ll-call-values", "type": "blanks", "q": "`malloc` returns `0x555555558000`. The diagram is drawn **just before line 16**.\n\n```c\n 5  int64_t* makeRow(int64_t n, int64_t start) {\n 6    int64_t* row = malloc(n * sizeof(int64_t));\n 7    for (int64_t k = 0; k < n; k++) {\n 8      row[k] = start + k;\n 9    }\n10    return row;\n11  }\n12\n13  int main(void) {\n14    int64_t* data = makeRow(3, 7);\n15    data[1] = 50;\n16    free(data);\n17  }\n```\n\nGive the contents of each labelled row (the last value it held, even if the row is crossed out).", "blanks": [{"label": "makeRow: RA", "mode": "num", "accept": ["14"]}, {"label": "malloc: arg0", "mode": "num", "accept": ["24"]}, {"label": "malloc: RA", "mode": "num", "accept": ["6"]}, {"label": "makeRow: k (final value)", "mode": "num", "accept": ["3"]}, {"label": "main: data (hex)", "mode": "hex", "accept": ["0x555555558000"]}], "why": "`makeRow` is called on line 14, `malloc` on line 6: those are the RAs. arg0 = 3 × `sizeof(int64_t)` = 3 × 8 = **24** bytes (not 3). The loop stops when `k` reaches **3**. `data` gets the returned heap address."}, {"id": "ll-call-heap", "type": "blanks", "q": "Same program, just before line 16, `malloc` returned `0x555555558000`.\n\n```c\n 5  int64_t* makeRow(int64_t n, int64_t start) {\n 6    int64_t* row = malloc(n * sizeof(int64_t));\n 7    for (int64_t k = 0; k < n; k++) {\n 8      row[k] = start + k;\n 9    }\n10    return row;\n11  }\n12\n13  int main(void) {\n14    int64_t* data = makeRow(3, 7);\n15    data[1] = 50;\n16    free(data);\n17  }\n```\n\nGive the heap contents.", "blanks": [{"label": "0x555555558000", "mode": "num", "accept": ["7"]}, {"label": "0x555555558008", "mode": "num", "accept": ["50"]}, {"label": "0x555555558010", "mode": "num", "accept": ["9"]}], "why": "`makeRow` writes start + k: 7, 8, 9, lowest index at the lowest address. Line 15 changes `data[1]` to 50. Line 16 hasn't run, so nothing is freed yet."}, {"id": "ll-crossed", "type": "mc", "q": "Same program, just before line 16. Which rows are **crossed out**?\n\n```c\n 5  int64_t* makeRow(int64_t n, int64_t start) {\n 6    int64_t* row = malloc(n * sizeof(int64_t));\n 7    for (int64_t k = 0; k < n; k++) {\n 8      row[k] = start + k;\n 9    }\n10    return row;\n11  }\n12\n13  int main(void) {\n14    int64_t* data = makeRow(3, 7);\n15    data[1] = 50;\n16    free(data);\n17  }\n```", "options": ["Every `makeRow:` and `malloc:` row", "Only the `malloc:` rows", "Every row except `main: RA`", "None, nothing has been freed yet"], "answer": 0, "why": "A frame is crossed out when its function **returns**. Both `malloc` and `makeRow` have returned by line 16. `main`'s rows (RA, `data`, RV(makeRow)) stay. `free` is about the heap, not the stack."}]}, {"id": "t-ptr", "title": "Pointer arithmetic (practice set: Pointer Arithmetic)", "read": "**Must know (3 things):**\n\n1. **`p[i]` is exactly `*(p + i)`.** The index counts from where `p` points, so `p[-1]` is the element before it.\n2. **`p + 1` moves one element, not one byte.** Address goes up by `sizeof` what it points to: `char` 1, `int16_t` 2, `int32_t`/`int`/`float` 4, `int64_t`/`double`/any pointer 8.\n3. `*` reads the value at an address; `&` gives the address of a variable. An array's name is the address of element 0.\n\n### Worked\n\n```c\nint32_t v[5] = {7, 14, 21, 28, 35};\nint32_t* p = v;\n```\n\n- `*(p + 3)` = element 3 = **28**. `*(v + 1)` = **14**. `p[4]` = **35**.\n- `*(++p)`: move `p` to element 1 first, then read: **14**.\n\n```c\nint16_t t[4] = {5, 6, 7, 8};\nint16_t* q = &t[2];\n```\n\n`q` starts at index 2, so add the offset to 2: `*(q - 2)` = t[0] = **5**, `*(q + 1)` = t[3] = **8**, `q[0]` = **7**, `q[-1]` = t[1] = **6**.\n\n**Addresses.** `double* dp` holds `0x3000`. `dp + 1` = `0x3008`, `dp + 2` = `0x3010` (16 = `0x10`, not `0x3016`).\n\n**Chars.** `char s[] = \"SYSTEMS\"; char* cp = s;`\n\n- `*(cp + 3)` = `'T'` (S-Y-S-**T**).\n- `&s[5]` and `&s[2]` are 3 elements apart, and a `char` is 1 byte, so **3 bytes**. For `int32_t` it would be 3 × 4 = 12 bytes.\n- `cp[cp[1] - 'W']`: inside first. `cp[1]` = `'Y'`. `'Y' - 'W'` = 2 letters apart = 2. `cp[2]` = `'S'`.\n", "questions": [{"id": "pa-values", "type": "blanks", "q": "```c\nint32_t g[5] = {11, 22, 33, 44, 55};\nint32_t* p = g;\n```\n\nGive each value.", "blanks": [{"label": "*(p + 4)", "mode": "num", "accept": ["55"]}, {"label": "*(g + 2)", "mode": "num", "accept": ["33"]}, {"label": "p[1]", "mode": "num", "accept": ["22"]}, {"label": "*(++p)", "mode": "num", "accept": ["22"]}], "why": "`p` starts at index 0. Index 4 = 55, index 2 = 33, index 1 = 22. `*(++p)` moves to index 1 first, then reads: 22."}, {"id": "pa-offset", "type": "blanks", "q": "```c\nint16_t w[5] = {9, 8, 7, 6, 5};\nint16_t* r = &w[3];\n```\n\nGive each value.", "blanks": [{"label": "*(r - 3)", "mode": "num", "accept": ["9"]}, {"label": "*(r + 1)", "mode": "num", "accept": ["5"]}, {"label": "r[0]", "mode": "num", "accept": ["6"]}, {"label": "r[-2]", "mode": "num", "accept": ["8"]}], "why": "`r` starts at index 3. 3 − 3 = 0 → 9. 3 + 1 = 4 → 5. `r[0]` = w[3] = 6. 3 − 2 = 1 → 8. Counting from the start of the array instead of from `r` is the mistake."}, {"id": "pa-addr", "type": "blanks", "q": "`int32_t* ip` holds `0x2000` and `double* dp` holds `0x5000`. Give each address.", "blanks": [{"label": "ip + 1", "mode": "hex", "accept": ["0x2004"]}, {"label": "ip + 5", "mode": "hex", "accept": ["0x2014"]}, {"label": "dp + 3", "mode": "hex", "accept": ["0x5018"]}], "why": "`ip` steps by 4: `0x2004`, and 5 × 4 = 20 = `0x14` → `0x2014`. `dp` steps by 8: 3 × 8 = 24 = `0x18` → `0x5018`. `0x2020` and `0x5024` come from adding decimal."}, {"id": "pa-char", "type": "blanks", "q": "```c\nchar word[] = \"POINTER\";\nchar* cp = word;\n```\n\nGive each answer (type the single character without quotes).", "blanks": [{"label": "*(cp + 4)", "mode": "text", "accept": ["T"]}, {"label": "bytes between &word[6] and &word[1]", "mode": "num", "accept": ["5"]}, {"label": "cp[cp[2] - 'G']", "mode": "text", "accept": ["I"]}], "why": "P-O-I-N-**T**: index 4 is `T`. 6 − 1 = 5 elements × 1 byte = 5 bytes. `cp[2]` = `'I'`, `'I' - 'G'` = 2, `cp[2]` = `I`."}]}, {"id": "t-life", "title": "Lifetime and the four memory bugs (practice set: Lifetime)", "read": "**Must know (the four bugs, one line each):**\n\n| Bug | One-line definition | Spot it |\n|---|---|---|\n| **Memory leak** | heap memory that can no longer be reached and was never freed | a pointer is reassigned (or the function ends) with no `free` first |\n| **Double free** | `free` called twice on the same block | two `free(p)` with no new `malloc` between |\n| **Use after free** | reading or writing heap memory after it was freed | `free(p)` and then `*p` or `p[i]` |\n| **Dangling pointer** | a pointer to something whose lifetime has ended | `return &local;` (or keeping a pointer after `free`) |\n\n**Scope vs lifetime:** scope = *where* in the code you can use the name. Lifetime = *how long* the thing exists in memory.\n\n| Lifetime | Applies to | Starts | Ends |\n|---|---|---|---|\n| **Automatic** | locals and parameters | execution enters the block | execution leaves the block |\n| **Dynamic** | `malloc` memory | allocation succeeds | `free` |\n| **Static** | globals and `static` variables | program starts | program ends |\n\n### Worked: the three code fixes the practice set asks for\n\n**Passing a value where a pointer is wanted.** `void update(int* p) { *p = 50; }` called as `update(x);` is wrong: it needs an address. Fix: `update(&x);`\n\n**Arithmetic on the pointer instead of the value.** `p = p * 2;` does not compile (you can't multiply an address). Fix: `*p = *p * 2;`\n\n**Returning the address of a local.** Fix it by giving the value a dynamic lifetime:\n\n```c\nint* makeValue() {\n  int* x = malloc(sizeof(int));\n  if (x == NULL) { return NULL; }\n  *x = 25;\n  return x;\n}\n```\n\nand the caller does `free(p);` when done.\n\n**Double pointer trace.** `int x = 4; int* p = &x; int** q = &p;` Then `*p` and `**q` are both `x`. `*p = *p + **q + 2;` makes x = 4 + 4 + 2 = 10.\n", "questions": [{"id": "lf-bug-a", "type": "mc", "q": "Which bug?\n\n```c\nint* scores = malloc(5 * sizeof(int));\nscores[0] = 90;\nfree(scores);\nscores[1] = 80;\n```", "options": ["Use after free", "Double free", "Memory leak", "Dangling pointer"], "answer": 0, "why": "The block is freed, then written through `scores[1]`. That is a **use after free**. (`scores` is also dangling after the `free`, but the bug the code *commits* is the use.)"}, {"id": "lf-bug-b", "type": "mc", "q": "Which bug?\n\n```c\nchar* buf = malloc(64);\nbuf = malloc(128);\nfree(buf);\n```", "options": ["Memory leak", "Double free", "Use after free", "Dangling pointer"], "answer": 0, "why": "The first 64-byte block's address is overwritten by the second `malloc`, so nothing can ever free it: **memory leak**. Only the 128-byte block is freed."}, {"id": "lf-bug-c", "type": "mc", "q": "Which bug?\n\n```c\ndouble* average(int a, int b) {\n  double avg = (a + b) / 2.0;\n  return &avg;\n}\n```", "options": ["Dangling pointer", "Memory leak", "Use after free", "Double free"], "answer": 0, "why": "`avg` is a local (automatic lifetime). It stops existing when `average` returns, so the returned address points at nothing valid: **dangling pointer**. No heap memory is involved, so it can't be a leak or use after free."}, {"id": "lf-bug-d", "type": "mc", "q": "Which bug?\n\n```c\nint* a = malloc(sizeof(int));\nint* b = a;\nfree(a);\nfree(b);\n```", "options": ["Double free", "Memory leak", "Use after free", "No bug: `a` and `b` are different pointers"], "answer": 0, "why": "`a` and `b` hold the **same address**, so the same block is freed twice: **double free**. Two pointer variables, one block."}, {"id": "lf-lifetime", "type": "blanks", "q": "Name the lifetime type of each (automatic, dynamic or static).", "blanks": [{"label": "a global `int counter;`", "mode": "text", "accept": ["static"]}, {"label": "a function parameter", "mode": "text", "accept": ["automatic"]}, {"label": "the block returned by `malloc`", "mode": "text", "accept": ["dynamic"]}, {"label": "`static int calls;` inside a function", "mode": "text", "accept": ["static"]}], "why": "Globals and anything declared `static` live for the whole program. Parameters and locals are automatic. `malloc` memory is dynamic: it lasts until `free`."}, {"id": "lf-trace", "type": "short", "mode": "num", "q": "What does this print?\n\n```c\nint a = 3;\nint* p = &a;\nint** q = &p;\n\n**q = *p * 2 + **q;\nprintf(\"%d\\n\", a);\n```", "accept": ["9"], "why": "`*p` and `**q` are both `a` = 3. 3 × 2 + 3 = **9**, stored back into `a` through `**q`."}, {"id": "lf-alias", "type": "blanks", "q": "What does this print?\n\n```c\nint a = 1;\nint b = 2;\nint* p = &a;\nint* q = &b;\n\nq = p;\n*q = 9;\nprintf(\"a=%d b=%d\\n\", a, b);\n```", "blanks": [{"label": "a", "mode": "num", "accept": ["9"]}, {"label": "b", "mode": "num", "accept": ["2"]}], "why": "`q = p` copies the **address**: now both point at `a`. `*q = 9` changes `a`. `b` is never touched."}, {"id": "lf-fix", "type": "short", "mode": "code", "q": "The function is `void reset(int* p) { *p = 0; }` and `main` has `int n = 8;`. The call `reset(n);` is wrong. Type the corrected call.", "accept": ["reset(&n);", "reset(&n)"], "why": "`reset` takes an `int*`, so pass the address of `n`: `reset(&n);`"}]}, {"id": "t-mem", "title": "Program memory (practice set: Program Memory)", "read": "**Must know (this is the whole practice set; about 5 minutes of points):**\n\n| Segment | What goes in it |\n|---|---|\n| **Text** (code) | program instructions (machine code) |\n| **Data** | global variables, `static` variables, read-only data such as string literals |\n| **Heap** | dynamically allocated memory (`malloc`, `realloc`) |\n| **Stack** | function call frames: local variables, parameters, return addresses |\n\n**The picture to be able to draw** (low addresses at the bottom):\n\n```\nhigh addresses\n  +---------+\n  |  Stack  |   grows DOWN, toward lower addresses\n  |    v    |\n  |         |\n  |    ^    |\n  |  Heap   |   grows UP, toward higher addresses\n  +---------+\n  |  Data   |\n  +---------+\n  |  Text   |\n  +---------+\n  |   OS    |\nlow addresses\n```\n\nChecklist of five things: **OS, text, data, heap, stack**, plus the two arrows pointing at each other.\n\n> **Trap:** locals are **not** in the data segment. Data = globals, statics, string literals. Locals are on the stack.\n", "questions": [{"id": "pm-where", "type": "blanks", "q": "Which segment holds each one? (text, data, heap or stack)", "blanks": [{"label": "a global `int total;`", "mode": "text", "accept": ["data", "data segment"]}, {"label": "a local `int i` inside `main`", "mode": "text", "accept": ["stack"]}, {"label": "the bytes you get from `malloc(40)`", "mode": "text", "accept": ["heap"]}, {"label": "the compiled machine code of `main`", "mode": "text", "accept": ["text", "code", "text segment", "code segment"]}, {"label": "the string literal `\"hello\"`", "mode": "text", "accept": ["data", "data segment"]}, {"label": "a function's return address", "mode": "text", "accept": ["stack"]}], "why": "Globals, statics and string literals → data. Locals, parameters, return addresses → stack. `malloc` → heap. Instructions → text."}, {"id": "pm-grow", "type": "mc", "q": "Which is right?", "options": ["The stack grows toward lower addresses, the heap toward higher addresses", "The stack grows toward higher addresses, the heap toward lower addresses", "Both grow toward higher addresses", "Both grow toward lower addresses"], "answer": 0, "why": "Stack sits at the top and grows **down**; heap sits above data and grows **up**. They grow toward each other."}, {"id": "pm-order", "type": "short", "mode": "list", "q": "List the five regions from the **lowest** address to the **highest**.", "accept": ["OS text data heap stack", "OS code data heap stack", "operating system text data heap stack"], "why": "OS, text, data, heap, stack. The stack is at the top.", "placeholder": "lowest first"}]}, {"id": "t-2d", "title": "2D arrays (practice set: 2D Arrays)", "read": "**Must know (3 things):**\n\n1. **Row-major: linear index = row × (number of columns) + column.** Multiply by the number of **columns**, not rows.\n2. **Address = base + linear index × sizeof(element).**\n3. **Two ways to malloc a 2D array:**\n   - **Method 1:** one contiguous block, `malloc(R * C * sizeof(int))`, access `a[i * C + j]`. One `malloc`, one `free`.\n   - **Method 2:** an array of row pointers (`int**`), then one `malloc` per row. R + 1 `malloc`s, rows are **not** guaranteed to be next to each other. Access `m[i][j]`, which is `*(*(m + i) + j)`. Free every row, **then** the outer array.\n\n### Worked\n\nAn 8 × 12 array, element `[5][9]`: 5 × 12 + 9 = **69**.\n\nA 6 × 10 `int32_t` array starts at `0xAAAA00001000`. Element `[4][3]`: index 4 × 10 + 3 = 43. Offset 43 × 4 = 172 = `0xAC`. Address `0xAAAA000010AC`.\n\n### The code-writing question (Method 2), the skeleton to memorise\n\n```c\nint** m = malloc(rows * sizeof(int*));      // array of row pointers\nfor (int i = 0; i < rows; i++) {\n  m[i] = malloc(cols * sizeof(int));        // one row\n}\n// use m[i][j]\nfor (int i = 0; i < rows; i++) {\n  free(m[i]);                               // rows first\n}\nfree(m);                                    // outer array last\n```\n\nThe two `sizeof`s differ: `sizeof(int*)` for the outer array, `sizeof(int)` for a row.\n", "questions": [{"id": "d2-linear", "type": "short", "mode": "num", "q": "A 15 × 40 array is stored in row-major order. What is the linear index of the element at row 6, column 11?", "accept": ["251"], "why": "6 × 40 + 11 = **251**. Multiplying by 15 (the number of rows) gives the wrong 101."}, {"id": "d2-addr", "type": "short", "mode": "hex", "q": "A 5 × 8 `int64_t` array is stored in row-major order starting at `0x700000000000`. What is the address of element `[2][5]`?", "accept": ["0x7000000000A8"], "why": "Index 2 × 8 + 5 = 21. Offset 21 × 8 = 168 = `0xA8`. Address `0x7000000000A8`."}, {"id": "d2-mallocs", "type": "short", "mode": "num", "q": "A 4-row, 9-column `int` matrix is allocated with Method 2 (array of row pointers). How many calls to `malloc` are made in total?", "accept": ["5"], "why": "One for the array of 4 row pointers, plus one per row: 1 + 4 = **5**. Method 1 would be 1."}, {"id": "d2-deref", "type": "short", "mode": "code", "q": "`m` is an `int**` matrix (Method 2). `m[2][3]` is one way to reach row 2, column 3. Type the other way, using only `*`, `+` and parentheses.", "accept": ["*(*(m+2)+3)"], "why": "`m[2]` is `*(m + 2)` (the row pointer); then `[3]` is `*(row + 3)`: `*(*(m + 2) + 3)`."}, {"id": "d2-diff", "type": "mc", "q": "What is the difference between the two ways of dynamically allocating a 2D array?", "options": ["One contiguous block, versus an array of pointers to separately allocated rows that may not be contiguous", "One lives on the stack, the other on the heap", "One is row-major, the other is column-major", "One needs `free`, the other is freed automatically"], "answer": 0, "why": "Method 1 = one contiguous block. Method 2 = array of row pointers, each row its own `malloc`, so rows may be scattered. Both are on the heap and both must be freed."}, {"id": "d2-write", "type": "self", "lines": 22, "q": "On paper: write a C program that asks for the number of rows and columns, allocates an `int**` matrix, fills it with `grid[i][j] = i + j`, prints it as a grid, and frees all memory.", "model": "```c\n#include <stdio.h>\n#include <stdlib.h>\n\nint main() {\n  int rows, cols;\n  printf(\"Enter number of rows: \");\n  scanf(\"%d\", &rows);\n  printf(\"Enter number of columns: \");\n  scanf(\"%d\", &cols);\n\n  int** grid = malloc(rows * sizeof(int*));\n  if (grid == NULL) { return 1; }\n\n  for (int i = 0; i < rows; i++) {\n    grid[i] = malloc(cols * sizeof(int));\n    if (grid[i] == NULL) { return 1; }\n    for (int j = 0; j < cols; j++) {\n      grid[i][j] = i + j;\n    }\n  }\n\n  for (int i = 0; i < rows; i++) {\n    for (int j = 0; j < cols; j++) {\n      printf(\"%d \", grid[i][j]);\n    }\n    printf(\"\\n\");\n  }\n\n  for (int i = 0; i < rows; i++) {\n    free(grid[i]);\n  }\n  free(grid);\n  return 0;\n}\n```", "rubric": ["outer `malloc(rows * sizeof(int*))`", "one `malloc(cols * sizeof(int))` per row, inside a loop", "checks a `malloc` result for `NULL`", "nested loops fill and print with `grid[i][j]`, newline after each row", "frees every row, then the outer array"], "why": "This is the practice set's only code-writing question, with a different fill value. The order that loses points: freeing `grid` before the rows (leaks every row), and using `sizeof(int)` for the outer array."}]}, {"id": "t-make", "title": "make (practice set: make and Makefiles)", "read": "**Must know (4 things):**\n\n1. **Default target = the first target in the file**, whatever it's called. Plain `make` builds it.\n2. **A target is rebuilt only if it's missing or older than one of its dependencies** (make compares timestamps). Otherwise \"nothing to be done\".\n3. `make X` builds only `X` and what `X` depends on. `make X Y` does `X`, then `Y`, in the order typed.\n4. A dependency that doesn't exist and has no rule = **error**, make stops.\n\n### Worked: the Makefile used in this part\n\n```make\nCC = gcc\nCFLAGS = -Wall -g\n\nlaunch: parse render\n\nparse: parse.c\n\t$(CC) $(CFLAGS) -o parse parse.c\n\nrender: render.c\n\t$(CC) $(CFLAGS) -o render render.c\n\nexport: export.c\n\t$(CC) $(CFLAGS) -o export export.c\n\ntidy:\n\trm -f parse render\n```\n\n- **Default target:** `launch` (first target; the `CC =` lines are variables, not targets).\n- **`make render`** runs `gcc -Wall -g -o render render.c` (substitute the variables).\n- **`make`** builds `launch`'s dependencies, `parse` then `render`. It never builds `export`: nothing `launch` needs depends on it.\n- **`make` again, nothing changed:** nothing is rebuilt; both programs are newer than their `.c` files.\n- **Edit only `render.c`, then `make`:** only `render` is rebuilt. `parse.c` didn't change.\n- **`make tidy`** runs `rm -f parse render`. It does not remove `export`.\n- **`make tidy` then `make parse`:** only `parse` is built.\n- **A file named `launch` exists and is newer than everything:** `make` does nothing; it thinks `launch` is up to date.\n", "questions": [{"id": "mk-default", "type": "short", "mode": "text", "q": "```make\nCC = gcc\nCFLAGS = -Wall -g\n\nlaunch: parse render\n\nparse: parse.c\n\t$(CC) $(CFLAGS) -o parse parse.c\n\nrender: render.c\n\t$(CC) $(CFLAGS) -o render render.c\n\nexport: export.c\n\t$(CC) $(CFLAGS) -o export export.c\n\ntidy:\n\trm -f parse render\n```\n\nWhat is the default target?", "accept": ["launch"], "why": "The first target listed is `launch`. Its name doesn't matter, and `CC`/`CFLAGS` are variables."}, {"id": "mk-cmd", "type": "short", "mode": "cmd", "q": "```make\nCC = gcc\nCFLAGS = -Wall -g\n\nlaunch: parse render\n\nparse: parse.c\n\t$(CC) $(CFLAGS) -o parse parse.c\n\nrender: render.c\n\t$(CC) $(CFLAGS) -o render render.c\n\nexport: export.c\n\t$(CC) $(CFLAGS) -o export export.c\n\ntidy:\n\trm -f parse render\n```\n\nWhat exact command runs for `make export`?", "accept": ["gcc -Wall -g -o export export.c"], "why": "Substitute `$(CC)` = `gcc` and `$(CFLAGS)` = `-Wall -g`: `gcc -Wall -g -o export export.c`."}, {"id": "mk-edit", "type": "mc", "q": "```make\nCC = gcc\nCFLAGS = -Wall -g\n\nlaunch: parse render\n\nparse: parse.c\n\t$(CC) $(CFLAGS) -o parse parse.c\n\nrender: render.c\n\t$(CC) $(CFLAGS) -o render render.c\n\nexport: export.c\n\t$(CC) $(CFLAGS) -o export export.c\n\ntidy:\n\trm -f parse render\n```\n\n`make` has just run successfully. You edit only `parse.c` and run `make`. What is rebuilt?", "options": ["Only `parse`", "`parse` and `render`", "`parse`, `render` and `export`", "Nothing"], "answer": 0, "why": "`parse.c` is now newer than `parse`, so `parse` is rebuilt. `render.c` is unchanged, so `render` is up to date. `export` isn't part of `launch` at all."}, {"id": "mk-clean", "type": "mc", "q": "```make\nCC = gcc\nCFLAGS = -Wall -g\n\nlaunch: parse render\n\nparse: parse.c\n\t$(CC) $(CFLAGS) -o parse parse.c\n\nrender: render.c\n\t$(CC) $(CFLAGS) -o render render.c\n\nexport: export.c\n\t$(CC) $(CFLAGS) -o export export.c\n\ntidy:\n\trm -f parse render\n```\n\nYou run `make tidy`, then `make render`, with no source changes. What happens on the second command?", "options": ["Only `render` is built", "`parse` and `render` are built", "Nothing: no source file changed", "An error: `render` was deleted"], "answer": 0, "why": "`tidy` deleted the programs, so `render` is missing and must be built. You asked for `render` only, so `parse` is not built."}, {"id": "mk-order", "type": "short", "mode": "list", "q": "```make\nCC = gcc\nCFLAGS = -Wall -g\n\nlaunch: parse render\n\nparse: parse.c\n\t$(CC) $(CFLAGS) -o parse parse.c\n\nrender: render.c\n\t$(CC) $(CFLAGS) -o render render.c\n\nexport: export.c\n\t$(CC) $(CFLAGS) -o export export.c\n\ntidy:\n\trm -f parse render\n```\n\nIn an empty build (no programs yet) you run `make export parse`. List the targets in the order they are built.", "accept": ["export parse"], "why": "Targets on the command line are built in the order given: `export`, then `parse`."}, {"id": "mk-missing", "type": "mc", "q": "```make\nCC = gcc\nCFLAGS = -Wall -g\n\nlaunch: parse render\n\nparse: parse.c\n\t$(CC) $(CFLAGS) -o parse parse.c\n\nrender: render.c\n\t$(CC) $(CFLAGS) -o render render.c\n\nexport: export.c\n\t$(CC) $(CFLAGS) -o export export.c\n\ntidy:\n\trm -f parse render\n```\n\n`render.c` is deleted and no programs exist yet. What happens when you run `make`?", "options": ["make stops with an error: there is no way to make `render.c`", "It builds `parse` and skips `render` silently", "It builds an empty `render`", "Nothing is built and nothing is printed"], "answer": 0, "why": "`render` needs `render.c`, which doesn't exist and has no rule, so make reports an error and stops. (`parse` comes first, so it may be built before the error.)"}, {"id": "mk-named", "type": "mc", "q": "```make\nCC = gcc\nCFLAGS = -Wall -g\n\nlaunch: parse render\n\nparse: parse.c\n\t$(CC) $(CFLAGS) -o parse parse.c\n\nrender: render.c\n\t$(CC) $(CFLAGS) -o render render.c\n\nexport: export.c\n\t$(CC) $(CFLAGS) -o export export.c\n\ntidy:\n\trm -f parse render\n```\n\nA file named `launch` exists in the directory and is newer than every other file. What does `make` do?", "options": ["Nothing: it believes `launch` is up to date", "Rebuilds `parse` and `render`", "Reports an error", "Deletes `launch` and rebuilds everything"], "answer": 0, "why": "make only looks at timestamps. A `launch` file newer than `parse` and `render` looks up to date, so nothing is built."}]}, {"id": "t-bash", "title": "Bash scripts (practice set: Bash Programming)", "read": "**Must know (definitions the practice set asks word for word):**\n\n- **Shell script:** an executable text file containing a sequence of shell commands; used to group commands and automate tasks.\n- **`#!/bin/bash`** (the shebang, first line): names the interpreter. The program that runs the script is **`/bin/bash`**.\n- **See permissions:** `ls -l`. **Add execute for the user:** `chmod u+x script.sh`.\n- Commands run **top to bottom, in order**.\n\n| Test | True when |\n|---|---|\n| `[ $x -eq 5 ]` | x equals 5 |\n| `[ $x -gt 5 ]` / `-lt` / `-le` | greater than / less than / less or equal |\n| `[ -e f ]` | f exists |\n| `[ -f f ]` | f exists and is a regular file |\n| `[ \"$w\" = \"cat\" ]` | the strings are equal |\n\n**Globs in a `for` loop:** `*` = any characters (including none), `?` = exactly one character, `[0-9]` = exactly one digit. Hidden files (starting with `.`) are never matched. **The loop runs once per matching file.**\n\n### Worked trace\n\n```bash\n#!/bin/bash\ntotal=0\nfor n in 3 6 7 10\ndo\n  if [ $((n % 2)) -eq 0 ]\n  then\n    total=$((total + n))\n  else\n    total=$((total + 2))\n  fi\ndone\necho $total\n```\n\nMake a table, one row per loop pass:\n\n| n | even? | total |\n|---|---|---|\n| 3 | no | 0 + 2 = 2 |\n| 6 | yes | 2 + 6 = 8 |\n| 7 | no | 8 + 2 = 10 |\n| 10 | yes | 10 + 10 = **20** |\n\nPrints `20`.\n\n### Worked glob\n\nFiles: `run1.sh run2.sh runA.sh run12.sh notes.sh .run3.sh`. `for f in run?.sh` matches `run1.sh`, `run2.sh`, `runA.sh` (one character between `run` and `.sh`), so the loop runs **3** times. `run[0-9].sh` matches only `run1.sh` and `run2.sh`.\n", "questions": [{"id": "bs-basics", "type": "blanks", "q": "Type each command or path.", "blanks": [{"label": "the program that runs a script starting with `#!/bin/bash`", "mode": "text", "accept": ["/bin/bash", "bash"]}, {"label": "command to view a file's permissions", "mode": "cmd", "accept": ["ls -l"]}, {"label": "command to add execute permission for the user on `backup.sh`", "mode": "cmd", "accept": ["chmod u+x backup.sh"]}], "why": "The shebang names the interpreter, `/bin/bash`. `ls -l` shows permissions. `chmod u+x backup.sh`: `u` = user, `+x` = add execute."}, {"id": "bs-words", "type": "short", "mode": "num", "q": "What does this print?\n\n```bash\n#!/bin/bash\n\nt=0\n\nfor w in red blue red red green\ndo\n  if [ \"$w\" = \"red\" ]\n  then\n    t=$((t + 2))\n  else\n    t=$((t + 5))\n  fi\ndone\n\necho $t\n```", "accept": ["16"], "why": "red +2, blue +5, red +2, red +2, green +5: 2 + 5 + 2 + 2 + 5 = **16**."}, {"id": "bs-gt", "type": "short", "mode": "num", "q": "What does this print?\n\n```bash\n#!/bin/bash\n\nx=2\n\nfor i in 5 2 8\ndo\n  if [ $i -gt 4 ]\n  then\n    x=$((x * 3))\n  else\n    x=$((x + i))\n  fi\ndone\n\necho $x\n```", "accept": ["24"], "why": "i = 5: greater than 4, x = 2 × 3 = 6. i = 2: not, x = 6 + 2 = 8. i = 8: x = 8 × 3 = **24**."}, {"id": "bs-le", "type": "short", "mode": "num", "q": "What does this print?\n\n```bash\n#!/bin/bash\n\nlimit=2\nr=0\n\nfor i in 1 2 3 4\ndo\n  if [ $i -le $limit ]\n  then\n    r=$((r + i))\n  else\n    r=$((r - 1))\n  fi\ndone\n\necho $r\n```", "accept": ["1"], "why": "`-le` is less than **or equal**. i = 1: r = 1. i = 2: r = 3. i = 3: r = 2. i = 4: r = **1**."}, {"id": "bs-glob", "type": "blanks", "q": "The directory contains:\n\n`pic1.jpg  pic2.jpg  pic20.jpg  picB.jpg  pic3.png  .pic4.jpg  list.txt`\n\n```bash\n#!/bin/bash\n\ncount=0\n\nfor f in pic[0-9].jpg; do\n  if [[ -e \"$f\" ]]; then\n    ((count += 3))\n  fi\ndone\n\nfor f in pic*.jpg; do\n  ((count++))\ndone\n\necho \"$count\"\n```", "blanks": [{"label": "how many times the first loop runs", "mode": "num", "accept": ["2"]}, {"label": "how many times the second loop runs", "mode": "num", "accept": ["4"]}, {"label": "what it prints", "mode": "num", "accept": ["10"]}], "why": "`pic[0-9].jpg` = `pic` + exactly one digit + `.jpg`: `pic1.jpg`, `pic2.jpg` (not `pic20`, not `picB`, not the hidden one, not the `.png`). 2 × 3 = 6. `pic*.jpg`: `pic1.jpg`, `pic2.jpg`, `pic20.jpg`, `picB.jpg` = 4 passes, +1 each. 6 + 4 = **10**."}]}], "checkpoint": [{"id": "cp-fp", "type": "blanks", "q": "Format: **1 sign bit, 4 exponent bits (bias 7), 3 fraction bits** (8 bits).\n\nGive each value (fractions are fine).", "blanks": [{"label": "denormalized exponent (1 − bias)", "mode": "num", "accept": ["-6"]}, {"label": "decode `0 1001 100`", "mode": "num", "accept": ["6"]}, {"label": "decode `1 0000 110`", "mode": "num", "accept": ["-3/256"]}, {"label": "largest normalized value", "mode": "num", "accept": ["240"]}, {"label": "smallest positive denormalized value", "mode": "num", "accept": ["1/512"]}], "why": "1 − 7 = −6. `1001` = 9, 9 − 7 = 2, `1.100` × 4 = **6**. Exponent all 0s: −`0.110` × 2^{−6} = −(1/128 + 1/256) = **−3/256**. Largest normal `0 1110 111` = `1.111` × 2^{7} = `11110000` = **240**. Smallest denormal `0.001` × 2^{−6} = 2^{−9} = **1/512**."}, {"id": "cp-fp-enc", "type": "short", "mode": "bits", "q": "Format: **1 sign bit, 4 exponent bits (bias 7), 3 fraction bits** (8 bits).\n\nEncode **−2.75**. Type all 8 bits.", "accept": ["11000011"], "why": "2.75 = `10.11` = `1.011` × 2^{1}. Stored exponent 1 + 7 = 8 = `1000`. Fraction `011`. Sign 1. `1 1000 011`."}, {"id": "cp-addr", "type": "blanks", "q": "A 50-element `int32_t` array starts at `0xAAAA00006004`.", "blanks": [{"label": "address of element 9", "mode": "hex", "accept": ["0xAAAA00006028"]}, {"label": "address of element 20", "mode": "hex", "accept": ["0xAAAA00006054"]}], "why": "9 × 4 = 36 = `0x24`; `0x6004 + 0x24 = 0x6028`. 20 × 4 = 80 = `0x50`; `0x6004 + 0x50 = 0x6054`."}, {"id": "cp-diagram", "type": "blanks", "q": "`main`'s frame starts at `0xFFFFAAAA0040`, 8-byte rows.\n\n```c\nint main() {\n  int64_t n[] = {1, 2, 3, 4};\n  int64_t* p = &n[1];\n\n  p[-1] = 10;\n  *(p + 2) = 40;\n  n[2] = &n[3] - p;\n}\n```\n\nGive the final contents of each row.", "blanks": [{"label": "0xFFFFAAAA0038", "mode": "num", "accept": ["40"]}, {"label": "0xFFFFAAAA0030", "mode": "num", "accept": ["2"]}, {"label": "0xFFFFAAAA0028", "mode": "num", "accept": ["2"]}, {"label": "0xFFFFAAAA0020", "mode": "num", "accept": ["10"]}, {"label": "0xFFFFAAAA0018 (hex)", "mode": "hex", "accept": ["0xFFFFAAAA0028"]}], "why": "Rows: `…0040` RA, `…0038` n[3], `…0030` n[2], `…0028` n[1], `…0020` n[0], `…0018` p. `p` = address of n[1] = `…0028`. `p[-1]` = n[0] = 10. `*(p + 2)` = n[3] = 40. `&n[3] − p` = 2 elements → n[2] = 2. n[1] is never changed, still 2."}, {"id": "cp-bug", "type": "mc", "q": "Which bug?\n\n```c\nint* load(int n) {\n  int* data = malloc(n * sizeof(int));\n  data[0] = n;\n  int first = data[0];\n  int* result = &first;\n  return result;\n}\n```", "options": ["Both a dangling pointer and a memory leak", "Only a memory leak", "Only a use after free", "Only a double free"], "answer": 0, "why": "`result` points at the local `first`, which dies on return: **dangling pointer**. And the `malloc` block is never freed and its address is lost when `load` returns: **memory leak**. Nothing is freed, so no use after free or double free."}, {"id": "cp-2d", "type": "short", "mode": "hex", "q": "A 7 × 6 `int32_t` array is stored in row-major order starting at `0xFFFF00002000`. What is the address of element `[3][4]`?", "accept": ["0xFFFF00002058"], "why": "Index 3 × 6 + 4 = 22. Offset 22 × 4 = 88 = `0x58`. Address `0xFFFF00002058`."}, {"id": "cp-make", "type": "mc", "q": "```make\nCC = gcc\n\ngo: north south\n\nnorth: north.c\n\t$(CC) -o north north.c\n\nsouth: south.c\n\t$(CC) -o south south.c\n\nwipe:\n\trm -f north south\n```\n\n`make` has run successfully. You then run `make wipe`, edit `south.c`, and run `make north`. What is built by that last command?", "options": ["Only `north`", "`north` and `south`", "Only `south`, because only `south.c` changed", "Nothing"], "answer": 0, "why": "You asked for `north` only. It is missing after `wipe`, so it is built. `south` is not requested, whatever happened to `south.c`."}, {"id": "cp-bash", "type": "short", "mode": "num", "q": "The directory contains `a1.c  a2.c  ab.c  a10.c  b1.c`. What does this print?\n\n```bash\n#!/bin/bash\n\nn=1\n\nfor f in a?.c\ndo\n  if [ -f \"$f\" ]\n  then\n    n=$((n * 2))\n  fi\ndone\n\necho $n\n```", "accept": ["8"], "why": "`a?.c` = `a` + exactly one character + `.c`: `a1.c`, `a2.c`, `ab.c` (not `a10.c`, not `b1.c`). Three passes, doubling each time from 1: 2, 4, **8**."}]}]};</script>
+<script>
+// Answer normalising + grading. Shared by the page (window.Grade) and validate.js (node).
+(function (root) {
+  'use strict';
+
+  function clean(raw) {
+    return String(raw == null ? '' : raw)
+      .replace(/[−–—]/g, '-')
+      .replace(/[‘’]/g, "'")
+      .replace(/[“”]/g, '"')
+      .replace(/ /g, ' ')
+      .trim()
+      .replace(/^`+|`+$/g, '')
+      .trim();
+  }
+
+  // Numbers: 12, -3.5, +0.25, 3/8, 2^-3, 1.5*2^3, 1e-8, inf, -inf, nan
+  function parseNum(raw) {
+    let s = clean(raw).toLowerCase().replace(/\s+/g, '').replace(/×/g, '*');
+    if (!s) return null;
+    if (s === 'nan') return 'nan';
+    if (/^[+-]?(inf|infinity|∞)$/.test(s)) return s[0] === '-' ? -Infinity : Infinity;
+    let m = s.match(/^([+-]?)(\d+(?:\.\d+)?)\/(\d+(?:\.\d+)?)$/);
+    if (m) return (m[1] === '-' ? -1 : 1) * parseFloat(m[2]) / parseFloat(m[3]);
+    m = s.match(/^([+-]?)(?:(\d+(?:\.\d+)?)[*x])?2(?:\^|\*\*)\(?([+-]?\d+)\)?$/);
+    if (m) return (m[1] === '-' ? -1 : 1) * (m[2] ? parseFloat(m[2]) : 1) * Math.pow(2, parseInt(m[3], 10));
+    if (/^[+-]?(\d+\.?\d*|\.\d+)(e[+-]?\d+)?$/.test(s)) return parseFloat(s);
+    return null;
+  }
+
+  const splitList = s => clean(s).split(/\s*(?:->|→|,|;|\bthen\b)\s*|\s+/).filter(Boolean);
+
+  // Each normaliser returns a comparable string, or null when the input isn't valid for the mode.
+  const norm = {
+    hex(s) {
+      const t = clean(s).toLowerCase().replace(/[\s_]/g, '').replace(/^0x/, '');
+      if (!/^[0-9a-f]+$/.test(t)) return null;
+      return t.replace(/^0+(?=.)/, '');
+    },
+    bits(s) {
+      const t = clean(s).replace(/[\s_|]/g, '').replace(/^0b/i, '');
+      return /^[01]+$/.test(t) ? t : null;
+    },
+    num(s) {
+      // "2 bytes" and "3 times" are the number; a count typed with its unit is not a wrong answer
+      s = clean(s).replace(/\s*(bytes?|bits?|elements?|times?|digits?|blocks?|calls?|pass(es)?|iterations?|characters?|chars?)$/i, '');
+      const v = parseNum(s);
+      return v === null ? null : v;
+    },
+    text(s) {
+      return clean(s).toLowerCase().replace(/^["']+|["']+$/g, '').replace(/\s+/g, ' ').replace(/[.!]+$/, '').trim();
+    },
+    code(s) {
+      return clean(s).replace(/\s+/g, '').replace(/;$/, '');
+    },
+    cmd(s) {
+      return clean(s).replace(/\s+/g, ' ');
+    },
+    list(s) {
+      return splitList(s).join(' ');
+    },
+    set(s) {
+      return splitList(s).sort().join(' ');
+    },
+  };
+
+  function same(mode, a, b) {
+    if (a === null || b === null) return false;
+    if (mode === 'num') {
+      if (a === 'nan' || b === 'nan') return a === b;
+      if (!isFinite(a) || !isFinite(b)) return a === b;
+      // relative, so 1e-16 and 1e-15 are different answers and tiny denormals are compared exactly
+      return Math.abs(a - b) <= 1e-9 * Math.max(Math.abs(a), Math.abs(b));
+    }
+    return a === b;
+  }
+
+  // spec = {mode, accept:[...], acceptRe:[...]}
+  function checkOne(spec, raw) {
+    const mode = spec.mode || 'text';
+    const n = (norm[mode] || norm.text)(raw);
+    if (clean(raw) === '') return false;
+    for (const a of spec.accept || []) {
+      if (same(mode, n, (norm[mode] || norm.text)(a))) return true;
+    }
+    for (const re of spec.acceptRe || []) {
+      if (new RegExp(re, 'i').test(norm.text(raw))) return true;
+    }
+    return false;
+  }
+
+  // -> {ok, parts?}   answer: mc = index | [indices]; short = string; blanks = [strings]; self = 'got'|'part'|'miss'
+  function grade(q, answer) {
+    if (q.type === 'mc') {
+      const want = [].concat(q.answer).slice().sort().join(',');
+      const got = [].concat(answer == null ? [] : answer).slice().sort().join(',');
+      return { ok: want === got };
+    }
+    if (q.type === 'short') return { ok: checkOne(q, answer) };
+    if (q.type === 'blanks') {
+      const parts = q.blanks.map((b, i) => checkOne(b, (answer || [])[i]));
+      return { ok: parts.every(Boolean), parts };
+    }
+    if (q.type === 'self') return { ok: answer === 'got' };
+    return { ok: false };
+  }
+
+  const api = { clean, parseNum, norm, same, checkOne, grade };
+  if (typeof module !== 'undefined' && module.exports) module.exports = api;
+  else root.Grade = api;
+})(typeof window !== 'undefined' ? window : globalThis);
+
+// Small markdown renderer for the subset described in BRIEF.md. No HTML passes through.
+(function (root) {
+  'use strict';
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+  function inline(src) {
+    const codes = [];
+    let s = String(src).replace(/`([^`\n]+)`/g, (_, c) => { codes.push(c); return '\u0001' + (codes.length - 1) + '\u0001'; });
+    // backslash-escaped punctuation (\* \_ \^ \~) is literal
+    s = s.replace(/\\([*_^~\\])/g, (_, ch) => '\u0002' + ch.charCodeAt(0) + '\u0002');
+    s = esc(s)
+      .replace(/\*\*([^*]+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/(^|[^*\w\\])\*([^*\s](?:[^*]*?[^*\s])?)\*(?![\w*])/g, '$1<em>$2</em>')
+      .replace(/~~([^~]+)~~/g, '<s>$1</s>')
+      .replace(/\^\{([^}]*)\}/g, '<sup>$1</sup>')
+      .replace(/_\{([^}]*)\}/g, '<sub>$1</sub>');
+    return s.replace(/\u0002(\d+)\u0002/g, (_, c) => esc(String.fromCharCode(+c)))
+      .replace(/\u0001(\d+)\u0001/g, (_, i) => '<code>' + esc(codes[+i]) + '</code>');
+  }
+
+  const isFence = l => /^\s*```/.test(l);
+  const isQuote = l => /^\s*>/.test(l);
+  const isHead = l => /^\s*#{1,4}\s+\S/.test(l);
+  const listRe = /^(\s*)([-*]|\d+[.)])\s+(.*)$/;
+  const isRow = l => /^\s*\|.*\|\s*$/.test(l);
+  const isSep = l => /^\s*\|?\s*:?-{2,}:?\s*(\|\s*:?-{2,}:?\s*)*\|?\s*$/.test(l);
+  const cells = l => l.trim().replace(/^\|/, '').replace(/\|$/, '').split('|').map(c => c.trim());
+
+  function calloutClass(text) {
+    const m = text.match(/^\s*\*\*([A-Za-z ]+):?\*\*/);
+    if (!m) return 'note';
+    const k = m[1].trim().toLowerCase();
+    if (k === 'trap' || k === 'warning' || k === 'careful') return 'trap';
+    if (k === 'rule' || k === 'key idea' || k === 'recipe') return 'rule';
+    if (k === 'on paper') return 'paper';
+    if (k === 'lecture') return 'lecture';
+    return 'note';
+  }
+
+  function blocks(lines) {
+    let html = '', i = 0;
+    while (i < lines.length) {
+      const line = lines[i];
+      if (!line.trim()) { i++; continue; }
+
+      if (isFence(line)) {
+        const indent = line.match(/^\s*/)[0].length;
+        const lang = line.trim().slice(3).trim().toLowerCase();
+        const body = [];
+        i++;
+        while (i < lines.length && !isFence(lines[i])) { body.push(lines[i].slice(Math.min(indent, lines[i].match(/^\s*/)[0].length))); i++; }
+        i++;
+        html += '<pre class="code"' + (lang ? ' data-lang="' + esc(lang) + '"' : '') + '><code>' + esc(body.join('\n')) + '</code></pre>';
+        continue;
+      }
+
+      if (isQuote(line)) {
+        const inner = [];
+        while (i < lines.length && isQuote(lines[i])) { inner.push(lines[i].replace(/^\s*>\s?/, '')); i++; }
+        html += '<blockquote class="callout ' + calloutClass(inner.join(' ')) + '">' + blocks(inner) + '</blockquote>';
+        continue;
+      }
+
+      if (isRow(line) && i + 1 < lines.length && isSep(lines[i + 1])) {
+        const head = cells(line);
+        i += 2;
+        let rows = '';
+        while (i < lines.length && isRow(lines[i])) {
+          rows += '<tr>' + cells(lines[i]).map(c => '<td>' + inline(c) + '</td>').join('') + '</tr>';
+          i++;
+        }
+        html += '<div class="tbl"><table><thead><tr>' + head.map(c => '<th>' + inline(c) + '</th>').join('') + '</tr></thead><tbody>' + rows + '</tbody></table></div>';
+        continue;
+      }
+
+      if (isHead(line)) {
+        html += '<h4>' + inline(line.replace(/^\s*#{1,4}\s+/, '')) + '</h4>';
+        i++;
+        continue;
+      }
+
+      const lm = line.match(listRe);
+      if (lm) {
+        const base = lm[1].length;
+        const ordered = /\d/.test(lm[2]);
+        const items = [];
+        let inFence = false;
+        while (i < lines.length) {
+          const l = lines[i];
+          const m = l.match(listRe);
+          if (inFence) { items[items.length - 1].push(l); if (isFence(l)) inFence = false; i++; continue; }
+          if (m && m[1].length === base) { items.push([m[3]]); i++; continue; }
+          const ind = l.match(/^\s*/)[0].length;
+          if (!l.trim()) {
+            // a blank line stays in the list only if the next non-blank line is indented or another item
+            let j = i + 1;
+            while (j < lines.length && !lines[j].trim()) j++;
+            if (j < lines.length && (lines[j].match(/^\s*/)[0].length > base || (lines[j].match(listRe) || [])[1] === lm[1])) { items[items.length - 1].push(''); i++; continue; }
+            break;
+          }
+          if (ind > base) { if (isFence(l)) inFence = true; items[items.length - 1].push(l.slice(Math.min(ind, base + 2))); i++; continue; }
+          break;
+        }
+        const tag = ordered ? 'ol' : 'ul';
+        html += '<' + tag + '>' + items.map(it => {
+          const inner = blocks(it);
+          const single = inner.match(/^<p>([\s\S]*)<\/p>$/);
+          return '<li>' + (single && !/<p>/.test(single[1]) ? single[1] : inner) + '</li>';
+        }).join('') + '</' + tag + '>';
+        continue;
+      }
+
+      const para = [];
+      while (i < lines.length && lines[i].trim() && !isFence(lines[i]) && !isQuote(lines[i]) && !isHead(lines[i]) && !listRe.test(lines[i]) &&
+             !(isRow(lines[i]) && i + 1 < lines.length && isSep(lines[i + 1]))) { para.push(lines[i].trim()); i++; }
+      html += '<p>' + inline(para.join(' ')) + '</p>';
+    }
+    return html;
+  }
+
+  function render(src) { return blocks(String(src == null ? '' : src).replace(/\r\n?/g, '\n').split('\n')); }
+  function renderInline(src) {
+    const h = render(src);
+    const m = h.match(/^<p>([\s\S]*)<\/p>$/);
+    return m && !/<p>/.test(m[1]) ? m[1] : h;
+  }
+
+  // Blank labels are plain text: backticks give code font, nothing else is formatted (so `**pp` survives).
+  function label(src) {
+    return String(src == null ? '' : src).split(/(`[^`\n]+`)/).map(part =>
+      /^`[^`\n]+`$/.test(part) ? '<code>' + esc(part.slice(1, -1)) + '</code>' : esc(part)).join('');
+  }
+
+  const api = { render, renderInline, inline, label, esc };
+  if (typeof module !== 'undefined' && module.exports) module.exports = api;
+  else root.MD = api;
+})(typeof window !== 'undefined' ? window : globalThis);
+
+// Endless drills. Every generator returns a question in the same shape the section files use,
+// so the page renders and grades it with the same code.
+(function (root) {
+  'use strict';
+  const ri = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+  const pick = arr => arr[ri(0, arr.length - 1)];
+  const hx = n => '0x' + n.toString(16).toUpperCase();
+
+  // 0x7FFE_3A9C_0F48 for long addresses, 0x4F48 for short ones
+  function addr(n) {
+    let h = n.toString(16).toUpperCase();
+    if (h.length <= 4) return '0x' + h.padStart(4, '0');
+    h = h.padStart(Math.ceil(h.length / 4) * 4, '0');
+    return '0x' + h.match(/.{4}/g).join('_');
+  }
+
+  const TYPES = [
+    { t: 'char', n: 1 }, { t: 'int8_t', n: 1 }, { t: 'short', n: 2 }, { t: 'int16_t', n: 2 },
+    { t: 'int', n: 4 }, { t: 'int32_t', n: 4 }, { t: 'float', n: 4 },
+    { t: 'long', n: 8 }, { t: 'int64_t', n: 8 }, { t: 'double', n: 8 }, { t: 'int *', n: 8, ptr: true },
+  ];
+  const WIDE = TYPES.filter(T => T.n > 1);
+  const decl = (T, name) => T.t + (T.ptr ? '' : ' ') + name;
+  const sizeNote = T => `\`sizeof(${T.t})\` = ${T.n}`;
+
+  function base() {
+    const low = ri(0, 0x1FF) * 8;
+    if (Math.random() < 0.55) return ri(1, 0xE) * 0x1000 + low;
+    return 0x7FFE00000000 + ri(0, 0xFFFF) * 0x10000 + ri(0, 0xF) * 0x1000 + low;
+  }
+
+  // ---------- element addresses ----------
+  function elemAddr() {
+    const T = pick(WIDE), len = ri(8, 40), b = base(), v = ri(0, 3);
+    const d = `\`${decl(T, `a[${len}]`)}\``;
+    if (v === 0) {
+      const i = ri(2, len - 1), off = i * T.n;
+      return { type: 'short', mode: 'hex', placeholder: '0x…',
+        q: `${d} starts at \`${addr(b)}\` (${sizeNote(T)}). What is the address of \`a[${i}]\`?`,
+        accept: [hx(b + off)],
+        why: `\`&a[i] = base + i × size\`. ${i} × ${T.n} = ${off} = \`${hx(off)}\`. \`${addr(b)} + ${hx(off)} = ${addr(b + off)}\`. Convert the offset to hex **before** adding.` };
+    }
+    if (v === 1) {
+      const k = ri(3, len - 1); let j = ri(0, len - 1); if (j === k) j = k - 2;
+      const ak = b + k * T.n, diff = (j - k) * T.n;
+      return { type: 'short', mode: 'hex', placeholder: '0x…',
+        q: `${d}: the address of \`a[${k}]\` is \`${addr(ak)}\` (${sizeNote(T)}). What is the address of \`a[${j}]\`?`,
+        accept: [hx(ak + diff)],
+        why: `\`a[${j}]\` is ${Math.abs(j - k)} element${Math.abs(j - k) === 1 ? '' : 's'} ${j > k ? 'after' : 'before'} \`a[${k}]\`: ${Math.abs(j - k)} × ${T.n} = ${Math.abs(diff)} = \`${hx(Math.abs(diff))}\` bytes. \`${addr(ak)} ${diff < 0 ? '−' : '+'} ${hx(Math.abs(diff))} = ${addr(ak + diff)}\`.` };
+    }
+    if (v === 2) {
+      const i = ri(1, len - 1), s = b + i * T.n;
+      return { type: 'blanks',
+        q: `${d} starts at \`${addr(b)}\` (${sizeNote(T)}). Which addresses does \`a[${i}]\` occupy?`,
+        blanks: [{ label: 'first (lowest) address', mode: 'hex', accept: [hx(s)] }, { label: 'last (highest) address', mode: 'hex', accept: [hx(s + T.n - 1)] }],
+        why: `Start: ${i} × ${T.n} = \`${hx(i * T.n)}\`, so \`${addr(s)}\`. It is ${T.n} bytes long, so it ends ${T.n - 1} later at \`${addr(s + T.n - 1)}\` (not ${T.n} later: that is the next element).` };
+    }
+    const i = ri(1, len - 1), x = b + i * T.n + ri(0, T.n - 1);
+    return { type: 'short', mode: 'num', placeholder: 'index',
+      q: `${d} starts at \`${addr(b)}\` (${sizeNote(T)}). Which element (index) contains the byte at address \`${addr(x)}\`?`,
+      accept: [String(i)],
+      why: `Offset = \`${addr(x)} − ${addr(b)}\` = \`${hx(x - b)}\` = ${x - b} bytes. ${x - b} ÷ ${T.n} = ${i} remainder ${(x - b) % T.n}, so it is inside \`a[${i}]\`.` };
+  }
+
+  // ---------- hex warm-up ----------
+  function hexWarm() {
+    const v = ri(0, 3);
+    if (v === 0) {
+      const a = ri(0x100, 0xFFF) * 4, d = pick([4, 8, 0xC, 0x10, 0x14, 0x18, 0x1C, 0x20, 0x24, 0x28, 0x30, 0x38, 0x40, 0x48, 0x50, 0x64]);
+      return { type: 'short', mode: 'hex', placeholder: '0x…', q: `\`${hx(a)} + ${hx(d)}\` = ?`, accept: [hx(a + d)],
+        why: `Add digit by digit in base 16, carrying at 16: \`${hx(a)} + ${hx(d)} = ${hx(a + d)}\` (decimal check: ${a} + ${d} = ${a + d}).` };
+    }
+    if (v === 1) {
+      const d = pick([4, 8, 0xC, 0x10, 0x14, 0x18, 0x1C, 0x20, 0x28, 0x30]), a = ri(0x100, 0xFFF) * 4 + d;
+      return { type: 'short', mode: 'hex', placeholder: '0x…', q: `\`${hx(a)} − ${hx(d)}\` = ?`, accept: [hx(a - d)],
+        why: `Borrow 16 when a digit goes negative: \`${hx(a)} − ${hx(d)} = ${hx(a - d)}\` (decimal check: ${a} − ${d} = ${a - d}).` };
+    }
+    if (v === 2) {
+      const n = ri(3, 31), s = pick([2, 4, 8]);
+      return { type: 'short', mode: 'hex', placeholder: '0x…', q: `An index of ${n} into an array of ${s}-byte elements is an offset of how many bytes? Answer **in hex**.`, accept: [hx(n * s)],
+        why: `${n} × ${s} = ${n * s} decimal = \`${hx(n * s)}\` (${Math.floor(n * s / 16)} sixteens and ${(n * s) % 16} ones).` };
+    }
+    const a = ri(0x100, 0xFFF) * 4, n = ri(2, 30), s = pick([2, 4, 8]);
+    return { type: 'short', mode: 'num', placeholder: 'count', q: `Two elements of an array of ${s}-byte values are at \`${hx(a)}\` and \`${hx(a + n * s)}\`. How many elements apart are they?`, accept: [String(n)],
+      why: `\`${hx(a + n * s)} − ${hx(a)} = ${hx(n * s)}\` = ${n * s} bytes. ${n * s} ÷ ${s} = ${n} elements.` };
+  }
+
+  // ---------- little-endian ----------
+  function distinctBytes(n) {
+    const out = [];
+    while (out.length < n) { const b = ri(0x01, 0xFE); if (!out.includes(b)) out.push(b); }
+    return out;
+  }
+  const b2 = n => n.toString(16).toUpperCase().padStart(2, '0');
+  function dumpTable(a, bytes) {
+    return '| address | byte |\n|---|---|\n' + bytes.map((x, i) => `| \`${addr(a + i)}\` | \`${b2(x)}\` |`).join('\n');
+  }
+  function littleEndian() {
+    const v = ri(0, 2), a = base();
+    if (v === 0) {
+      const n = pick([4, 4, 8]), bytes = distinctBytes(n), k = ri(0, n - 1);
+      const val = '0x' + bytes.slice().reverse().map(b2).join('');
+      return { type: 'short', mode: 'hex', placeholder: '0x…',
+        q: `A ${n}-byte value \`${val}\` is stored at address \`${addr(a)}\` on a little-endian machine. Which byte is at address \`${addr(a + k)}\`?`,
+        accept: ['0x' + b2(bytes[k])],
+        why: `Little-endian: the **least significant byte goes at the lowest address**. From \`${addr(a)}\` upward the bytes are ${bytes.map(b => '`' + b2(b) + '`').join(', ')}. \`${addr(a + k)}\` is byte ${k}, so \`0x${b2(bytes[k])}\`.` };
+    }
+    if (v === 1) {
+      const bytes = distinctBytes(8), n = pick([2, 4, 4, 8]), off = n === 8 ? 0 : ri(0, 8 - n);
+      const got = bytes.slice(off, off + n);
+      return { type: 'short', mode: 'hex', placeholder: '0x…',
+        q: `Memory on a little-endian machine:\n\n${dumpTable(a, bytes)}\n\nWhat value does a \`uint${n * 8}_t\` read from address \`${addr(a + off)}\` have? Answer in hex.`,
+        accept: ['0x' + got.slice().reverse().map(b2).join('')],
+        why: `Take ${n} bytes starting at \`${addr(a + off)}\`: ${got.map(b => '`' + b2(b) + '`').join(' ')}. The lowest address holds the least significant byte, so write them in **reverse**: \`0x${got.slice().reverse().map(b2).join('')}\`.` };
+    }
+    const n = pick([2, 4]), bytes = distinctBytes(n);
+    const val = '0x' + bytes.slice().reverse().map(b2).join('');
+    return { type: 'blanks',
+      q: `On a little-endian machine, a \`uint${n * 8}_t\` at address \`${addr(a)}\` is set to \`${val}\`. What is in each byte?`,
+      blanks: bytes.map((b, i) => ({ label: `byte at ${addr(a + i)}`, mode: 'hex', accept: ['0x' + b2(b)] })),
+      why: `Least significant byte first: ${bytes.map((b, i) => `\`${addr(a + i)}\` = \`${b2(b)}\``).join(', ')}. Only the order of whole **bytes** flips, never the two hex digits inside a byte.` };
+  }
+
+  // ---------- pointer arithmetic ----------
+  function ptrArith() {
+    const T = pick(TYPES.filter(x => !x.ptr)), v = ri(0, 4);
+    const p = Math.floor(base() / 8) * 8, n = ri(2, 12);
+    const d = `\`${T.t} *p = (${T.t} *)${addr(p)};\``;
+    if (v === 0 || v === 1) {
+      const expr = v === 0 ? pick([`p + ${n}`, `&p[${n}]`]) : `p - ${n}`;
+      const r = v === 0 ? p + n * T.n : p - n * T.n;
+      return { type: 'short', mode: 'hex', placeholder: '0x…',
+        q: `${d} (${sizeNote(T)})\n\nWhat address is \`${expr}\`?`,
+        accept: [hx(r)],
+        why: `Pointer arithmetic moves in **elements**, not bytes: ${n} × ${T.n} = ${n * T.n} = \`${hx(n * T.n)}\` bytes. \`${addr(p)} ${v === 0 ? '+' : '−'} ${hx(n * T.n)} = ${addr(r)}\`.${T.n > 1 ? ` Adding a raw ${n} gives \`${addr(v === 0 ? p + n : p - n)}\`, which is wrong.` : ''}` };
+    }
+    if (v === 2) {
+      const W = pick(WIDE.filter(x => !x.ptr));
+      const dd = `\`${W.t} *p = (${W.t} *)${addr(p)};\``;
+      return { type: 'short', mode: 'hex', placeholder: '0x…',
+        q: `${dd} (${sizeNote(W)})\n\nWhat address is \`(char *)p + ${n}\`?`,
+        accept: [hx(p + n)],
+        why: `The cast happens first, so the arithmetic is on a \`char *\` and each step is 1 byte: \`${addr(p)} + ${hx(n)} = ${addr(p + n)}\`. Without the cast it would be ${n} × ${W.n} = \`${hx(n * W.n)}\` bytes.` };
+    }
+    if (v === 3) {
+      const W = pick(WIDE.filter(x => !x.ptr)), q = p + n * W.n;
+      return { type: 'short', mode: 'num', placeholder: 'number',
+        q: `\`${W.t} *p\` holds \`${addr(p)}\` and \`${W.t} *q\` holds \`${addr(q)}\` (${sizeNote(W)}). What is the value of \`q - p\`?`,
+        accept: [String(n)],
+        why: `Subtracting pointers gives a count of **elements**: \`${addr(q)} − ${addr(p)} = ${hx(n * W.n)}\` = ${n * W.n} bytes, and ${n * W.n} ÷ ${W.n} = ${n}.` };
+    }
+    const W = pick(WIDE.filter(x => !x.ptr)), times = ri(2, 6);
+    return { type: 'short', mode: 'hex', placeholder: '0x…',
+      q: `\`${W.t} *p = (${W.t} *)${addr(p)};\` (${sizeNote(W)})\n\nAfter \`p++;\` runs ${times} times, what address does \`p\` hold?`,
+      accept: [hx(p + times * W.n)],
+      why: `Each \`p++\` advances one element = ${W.n} bytes. ${times} × ${W.n} = \`${hx(times * W.n)}\`. \`${addr(p)} + ${hx(times * W.n)} = ${addr(p + times * W.n)}\`.` };
+  }
+
+  // ---------- floating point ----------
+  function fpFormat() {
+    const k = pick([2, 3, 3, 4]), f = pick([2, 3, 4, 4, 5]);
+    return { k, f, bias: (1 << (k - 1)) - 1, maxE: (1 << k) - 1 };
+  }
+  const fmtText = F => `1 sign bit, ${F.k} exponent bits, ${F.f} fraction bits (${1 + F.k + F.f} bits total, bias = 2^{k−1} − 1)`;
+  const bin = (n, w) => n.toString(2).padStart(w, '0');
+  const pattern = (F, s, e, m) => `${s} ${bin(e, F.k)} ${bin(m, F.f)}`;
+  function fpValue(F, s, e, m) {
+    const sg = s ? -1 : 1;
+    if (e === 0) return m === 0 ? { cls: 'zero', v: sg * 0 } : { cls: 'denormalized', v: sg * (m / (1 << F.f)) * Math.pow(2, 1 - F.bias) };
+    if (e === F.maxE) return m === 0 ? { cls: 'infinity', v: sg * Infinity } : { cls: 'NaN', v: NaN };
+    return { cls: 'normalized', v: sg * (1 + m / (1 << F.f)) * Math.pow(2, e - F.bias) };
+  }
+  const CLS = {
+    normalized: ['normalized', 'normal', 'norm'],
+    denormalized: ['denormalized', 'denormal', 'denorm', 'subnormal', 'denormalised'],
+    zero: ['zero', '0', '+0', '-0'],
+    infinity: ['infinity', 'inf', '+infinity', '-infinity', '+inf', '-inf', '∞', '+∞', '-∞'],
+    NaN: ['nan', 'not a number'],
+  };
+  const signed = v => (Object.is(v, -0) ? '−0' : v === 0 ? '+0' : v === Infinity ? '+∞' : v === -Infinity ? '−∞' : (v > 0 ? '+' : '−') + Math.abs(v));
+  const numAccept = v => (Number.isNaN(v) ? ['nan'] : v === Infinity ? ['inf'] : v === -Infinity ? ['-inf'] : [String(v)]);
+
+  function fpWhy(F, s, e, m) {
+    const r = fpValue(F, s, e, m), frac = bin(m, F.f), sg = s ? 'negative' : 'positive';
+    const head = `Bias = 2^{${F.k}−1} − 1 = ${F.bias}. Sign bit ${s} → ${sg}. Exponent field \`${bin(e, F.k)}\` = ${e}. `;
+    if (r.cls === 'zero') return head + `All-zero exponent **and** all-zero fraction → **${s ? '−0' : '+0'}**.`;
+    if (r.cls === 'infinity') return head + `All-ones exponent with a zero fraction → **${s ? '−∞' : '+∞'}**.`;
+    if (r.cls === 'NaN') return head + `All-ones exponent with a non-zero fraction → **NaN** (the sign doesn't matter).`;
+    if (r.cls === 'denormalized')
+      return head + `All-zero exponent with a non-zero fraction → **denormalized**: no implicit 1, and the exponent is fixed at 1 − bias = ${1 - F.bias}. Value = 0.${frac}₂ × 2^{${1 - F.bias}} = ${m / (1 << F.f)} × ${Math.pow(2, 1 - F.bias)} = **${signed(r.v)}**.`;
+    return head + `Neither all zeros nor all ones → **normalized**. True exponent = ${e} − ${F.bias} = ${e - F.bias}. Value = 1.${frac}₂ × 2^{${e - F.bias}} = ${1 + m / (1 << F.f)} × ${Math.pow(2, e - F.bias)} = **${signed(r.v)}**.`;
+  }
+
+  function randomPattern(F, allowSpecial) {
+    const s = ri(0, 1), r = Math.random();
+    if (allowSpecial && r < 0.08) return [s, F.maxE, 0];
+    if (allowSpecial && r < 0.16) return [s, F.maxE, ri(1, (1 << F.f) - 1)];
+    if (allowSpecial && r < 0.2) return [s, 0, 0];
+    if (r < 0.5) return [s, 0, ri(1, (1 << F.f) - 1)];
+    return [s, ri(1, F.maxE - 1), ri(0, (1 << F.f) - 1)];
+  }
+
+  function fpDecode() {
+    const F = fpFormat(), [s, e, m] = randomPattern(F, true), r = fpValue(F, s, e, m);
+    return { type: 'blanks',
+      q: `Format: ${fmtText(F)}.\n\nDecode \`${pattern(F, s, e, m)}\`.`,
+      blanks: [
+        { label: 'bias', mode: 'num', accept: [String(F.bias)] },
+        { label: 'kind (normalized / denormalized / zero / infinity / NaN)', mode: 'text', accept: CLS[r.cls] },
+        { label: 'value (decimal, with its sign; inf or nan if special)', mode: 'num', accept: numAccept(r.v) },
+      ],
+      why: fpWhy(F, s, e, m) };
+  }
+
+  function fpEncode() {
+    const F = fpFormat(), [s, e, m] = randomPattern(F, false), r = fpValue(F, s, e, m);
+    return { type: 'short', mode: 'bits', placeholder: `${1 + F.k + F.f} bits`,
+      q: `Format: ${fmtText(F)}.\n\nEncode **${signed(r.v)}**. Give all ${1 + F.k + F.f} bits.`,
+      accept: [pattern(F, s, e, m)],
+      why: (r.cls === 'denormalized'
+        ? `Bias = ${F.bias}. Try normalized first: |value| = ${Math.abs(r.v)} would need a stored exponent of ${Math.floor(Math.log2(Math.abs(r.v))) + F.bias}, which is ≤ 0, so it has to be **denormalized**: exponent field all zeros, value = 0.f × 2^{${1 - F.bias}}. 0.f = ${Math.abs(r.v)} ÷ ${Math.pow(2, 1 - F.bias)} = ${m / (1 << F.f)} = 0.${bin(m, F.f)}₂. `
+        : `Bias = ${F.bias}. |value| = ${Math.abs(r.v)} = 1.${bin(m, F.f)}₂ × 2^{${e - F.bias}}. Stored exponent = ${e - F.bias} + ${F.bias} = ${e} = \`${bin(e, F.k)}\`. Fraction = the bits after the leading 1, padded to ${F.f}: \`${bin(m, F.f)}\`. `)
+        + `Sign bit ${s}. Pattern: \`${pattern(F, s, e, m)}\`.` };
+  }
+
+  function fpExtremes() {
+    const F = fpFormat(), ones = (1 << F.f) - 1;
+    const cases = [
+      ['largest positive **normalized**', 0, F.maxE - 1, ones, 'largest exponent that is not all ones, fraction all ones'],
+      ['smallest positive **normalized**', 0, 1, 0, 'exponent field 1 (the smallest that is not all zeros), fraction all zeros'],
+      ['largest positive **denormalized**', 0, 0, ones, 'exponent all zeros, fraction all ones'],
+      ['smallest positive **denormalized** (the smallest positive value at all)', 0, 0, 1, 'exponent all zeros, fraction 0…01'],
+    ];
+    const [name, s, e, m, how] = pick(cases), r = fpValue(F, s, e, m);
+    return { type: 'blanks',
+      q: `Format: ${fmtText(F)}.\n\nWhat is the ${name} value?`,
+      blanks: [
+        { label: `bit pattern (${1 + F.k + F.f} bits)`, mode: 'bits', accept: [pattern(F, s, e, m)] },
+        { label: 'value (decimal, a fraction, or like 1.75*2^3)', mode: 'num', accept: [String(r.v)] },
+      ],
+      why: `Pattern: ${how} → \`${pattern(F, s, e, m)}\`. ` + fpWhy(F, s, e, m) };
+  }
+
+  // ---------- 2D arrays ----------
+  function arr2d() {
+    const T = pick(WIDE.filter(x => !x.ptr)), R = ri(3, 9), C = ri(3, 9), b = base(), v = ri(0, 3);
+    const i = ri(1, R - 1), j = ri(0, C - 1), lin = i * C + j;
+    const d = `\`${T.t} a[${R}][${C}]\``;
+    if (v === 0)
+      return { type: 'short', mode: 'num', placeholder: 'index',
+        q: `${d} is stored in row-major order. What is the linear index (0-based position in the flat block) of \`a[${i}][${j}]\`?`,
+        accept: [String(lin)],
+        why: `linear index = i × C + j = ${i} × ${C} + ${j} = **${lin}**. Multiply by the number of **columns** (${C}), not rows (${R})${R !== C ? `: ${i} × ${R} + ${j} = ${i * R + j} is the classic slip` : ''}.` };
+    if (v === 1)
+      return { type: 'short', mode: 'hex', placeholder: '0x…',
+        q: `${d} starts at \`${addr(b)}\` (${sizeNote(T)}), row-major. What is the address of \`a[${i}][${j}]\`?`,
+        accept: [hx(b + lin * T.n)],
+        why: `Linear index = ${i} × ${C} + ${j} = ${lin}. Byte offset = ${lin} × ${T.n} = ${lin * T.n} = \`${hx(lin * T.n)}\`. \`${addr(b)} + ${hx(lin * T.n)} = ${addr(b + lin * T.n)}\`.` };
+    if (v === 2)
+      return { type: 'blanks',
+        q: `${d} is row-major. Which element is at linear index ${lin}?`,
+        blanks: [{ label: 'row i', mode: 'num', accept: [String(i)] }, { label: 'column j', mode: 'num', accept: [String(j)] }],
+        why: `i = ${lin} ÷ ${C} = ${i} (integer division by the column count), j = ${lin} mod ${C} = ${j}. So \`a[${i}][${j}]\`.` };
+    return { type: 'blanks',
+      q: `${d} starts at \`${addr(b)}\` (${sizeNote(T)}), row-major. Which element is stored at address \`${addr(b + lin * T.n)}\`?`,
+      blanks: [{ label: 'row i', mode: 'num', accept: [String(i)] }, { label: 'column j', mode: 'num', accept: [String(j)] }],
+      why: `Offset = \`${hx(lin * T.n)}\` = ${lin * T.n} bytes → ${lin * T.n} ÷ ${T.n} = linear index ${lin}. i = ${lin} ÷ ${C} = ${i}, j = ${lin} mod ${C} = ${j}.` };
+  }
+
+  // ---------- first-fit heap ----------
+  // free list = sorted [start, size] blocks; first fit, split, coalesce; no headers
+  function heapSim(size, ops) {
+    let free = [[0, size]];
+    const live = {}, log = [];
+    const show = () => (free.length ? free.map(([s, n]) => `${s}-${s + n - 1}`).join(', ') : 'empty');
+    for (const op of ops) {
+      if (op.malloc) {
+        const idx = free.findIndex(([, n]) => n >= op.malloc);
+        if (idx < 0) { live[op.p] = null; log.push([`${op.p} = malloc(${op.malloc})`, 'NULL (no single free block is big enough)', show()]); continue; }
+        const [s, n] = free[idx];
+        live[op.p] = [s, op.malloc];
+        if (n === op.malloc) free.splice(idx, 1); else free[idx] = [s + op.malloc, n - op.malloc];
+        log.push([`${op.p} = malloc(${op.malloc})`, `${s}-${s + op.malloc - 1}`, show()]);
+      } else {
+        if (!live[op.free]) { log.push([`free(${op.free})`, 'free(NULL) does nothing', show()]); continue; }
+        const [s, n] = live[op.free];
+        delete live[op.free];
+        free.push([s, n]);
+        free.sort((a, b) => a[0] - b[0]);
+        const merged = [];
+        for (const blk of free) {
+          const last = merged[merged.length - 1];
+          if (last && last[0] + last[1] === blk[0]) last[1] += blk[1]; else merged.push(blk.slice());
+        }
+        free = merged;
+        log.push([`free(${op.free})`, `${s}-${s + n - 1} returned`, show()]);
+      }
+    }
+    return { free, live, log, show: show() };
+  }
+
+  function firstFit() {
+    for (let attempt = 0; attempt < 200; attempt++) {
+      const size = pick([800, 1000, 1000, 1200]), ops = [], live = [];
+      let np = 0, frees = 0;
+      const count = ri(6, 8);
+      for (let k = 0; k < count; k++) {
+        const last = k === count - 1;
+        if (!last && live.length >= 2 && Math.random() < 0.45) { ops.push({ free: live.splice(ri(0, live.length - 1), 1)[0] }); frees++; }
+        else { np++; ops.push({ p: 'p' + np, malloc: ri(1, 8) * 50 }); live.push('p' + np); }
+      }
+      if (frees < 2) continue;
+      const sim = heapSim(size, ops);
+      const nulls = Object.entries(sim.live).filter(([, v]) => v === null).map(([k]) => k);
+      const lastP = 'p' + np;
+      if (nulls.some(p => p !== lastP)) continue;
+      if (nulls.length && Math.random() < 0.6) continue;
+      const code = ops.map(o => (o.malloc ? `char *${o.p} = malloc(${o.malloc});` : `free(${o.free});`)).join('\n');
+      const liveNames = Object.keys(sim.live).filter(p => sim.live[p]).sort((a, b) => +a.slice(1) - +b.slice(1));
+      const blanks = liveNames.filter(p => p !== lastP).slice(-2).map(p => ({ label: `${p} starts at byte`, mode: 'num', accept: [String(sim.live[p][0])] }));
+      blanks.push(sim.live[lastP]
+        ? { label: `${lastP} starts at byte (or NULL)`, mode: 'text', accept: [String(sim.live[lastP][0])] }
+        : { label: `${lastP} starts at byte (or NULL)`, mode: 'text', accept: ['null', 'NULL (fails)', 'fails'], acceptRe: ['^null'] });
+      blanks.push({ label: 'free list at the end, in address order', mode: 'list', accept: [sim.show], placeholder: 'like 50-199, 900-999' });
+      return { type: 'blanks',
+        q: `A ${size}-byte heap covers bytes 0–${size - 1} and starts completely free. The manager uses **first fit** (lowest address first), splits blocks, coalesces neighbours on \`free\`, and has no per-block header.\n\n\`\`\`c\n${code}\n\`\`\`\n\nWhere does everything end up?`,
+        blanks,
+        why: '| call | gets / returns | free list after |\n|---|---|---|\n' + sim.log.map(r => `| \`${r[0]}\` | ${r[1]} | ${r[2]} |`).join('\n') +
+          (sim.live[lastP] ? '' : `\n\nTotal free space may be enough, but no **single** block is: that is fragmentation, and \`malloc\` returns \`NULL\`.`) };
+    }
+    return null;
+  }
+
+  const GENS = [
+    { id: 'hex', title: 'Hex warm-up', blurb: 'Add, subtract and scale offsets in hex. Everything address-related depends on this.', make: hexWarm },
+    { id: 'elem', title: 'Element addresses', blurb: 'base + i × sizeof(T), forwards and backwards.', make: elemAddr },
+    { id: 'endian', title: 'Little-endian bytes', blurb: 'Which byte is where, and what value a read returns.', make: littleEndian },
+    { id: 'ptr', title: 'Pointer arithmetic', blurb: 'p + n, p − n, q − p, casts, p++.', make: ptrArith },
+    { id: 'arr2d', title: '2D array indexing', blurb: 'Linear index and address of a[i][j], and back again.', make: arr2d },
+    { id: 'fpdec', title: 'Floating point: decode', blurb: 'Any format: bias, kind, value. Includes denormals and specials.', make: fpDecode },
+    { id: 'fpenc', title: 'Floating point: encode', blurb: 'Value to bit pattern, normalized or denormalized.', make: fpEncode },
+    { id: 'fpext', title: 'Floating point: extremes', blurb: 'Largest and smallest normalized and denormalized values of a format.', make: fpExtremes },
+    { id: 'heap', title: 'First-fit heap traces', blurb: 'malloc and free on a small heap: where each block lands and the final free list.', make: firstFit },
+  ];
+
+  const api = { GENS, heapSim, fpValue, addr };
+  if (typeof module !== 'undefined' && module.exports) module.exports = api;
+  else root.Gen = api;
+})(typeof window !== 'undefined' ? window : globalThis);
+
+// Merging two copies of a progress document. Shared by the page (window.Merge) and the sync
+// endpoint (cloud/lib/merge.cjs is a copy made by build.py), so both sides agree.
+(function (root) {
+  'use strict';
+  const blank = () => ({ v: 1, q: {}, sec: {}, flags: {}, drills: {}, mocks: [], last: null, updated: 0, resetAt: 0 });
+
+  function tidy(p) {
+    for (const k of ['q', 'sec', 'flags', 'drills']) if (!p[k] || typeof p[k] !== 'object' || Array.isArray(p[k])) p[k] = {};
+    if (!Array.isArray(p.mocks)) p.mocks = [];
+    return p;
+  }
+
+  // "Reset all progress" at time R: forget everything recorded before it, on every device.
+  function drop(p, R) {
+    if ((p.resetAt || 0) >= R) return;
+    for (const k in p.q) if ((p.q[k].t || 0) <= R) delete p.q[k];
+    for (const k in p.flags) if ((p.flags[k].t || 0) <= R) delete p.flags[k];
+    p.mocks = p.mocks.filter(m => (m.t || 0) > R);
+    p.sec = {}; p.drills = {}; p.last = null; p.resetAt = R;
+  }
+
+  // Merge b into a, in place (objects already in a keep their identity). Returns a.
+  // Per question and per flag the most recent record wins; parts read and checkpoint bests only grow.
+  function merge(a, b) {
+    tidy(a);
+    if (!b || typeof b !== 'object') return a;
+    b = tidy(JSON.parse(JSON.stringify(b)));
+    const R = Math.max(a.resetAt || 0, b.resetAt || 0);
+    if (R) { drop(a, R); drop(b, R); }
+
+    for (const k in b.q) if (!a.q[k] || (b.q[k].t || 0) > (a.q[k].t || 0)) a.q[k] = b.q[k];
+    for (const k in b.flags) if (!a.flags[k] || (b.flags[k].t || 0) > (a.flags[k].t || 0)) a.flags[k] = b.flags[k];
+    for (const k in b.sec) {
+      const x = a.sec[k] || (a.sec[k] = { parts: {}, cp: null }), y = b.sec[k] || {};
+      if (!x.parts) x.parts = {};
+      Object.assign(x.parts, y.parts || {});
+      if (y.cp) {
+        const xn = x.cp ? x.cp.n || 0 : 0, yn = y.cp.n || 0;
+        x.cp = { best: Math.max(y.cp.best || 0, x.cp ? x.cp.best || 0 : 0), last: !x.cp || yn >= xn ? y.cp.last : x.cp.last, n: Math.max(xn, yn) };
+      }
+    }
+    for (const k in b.drills) {
+      if (!a.drills[k]) a.drills[k] = b.drills[k];
+      else if ((b.drills[k].n || 0) > (a.drills[k].n || 0)) Object.assign(a.drills[k], b.drills[k]);
+    }
+    const seen = new Set(a.mocks.map(m => m.t));
+    b.mocks.forEach(m => { if (!seen.has(m.t)) a.mocks.push(m); });
+    a.mocks.sort((m, n) => (m.t || 0) - (n.t || 0));
+    if (b.last && (!a.last || (b.updated || 0) > (a.updated || 0))) a.last = b.last;
+    a.updated = Math.max(a.updated || 0, b.updated || 0);
+    return a;
+  }
+
+  const api = { blank, merge };
+  if (typeof module !== 'undefined' && module.exports) module.exports = api;
+  else root.Merge = api;
+})(typeof window !== 'undefined' ? window : globalThis);
+
+(function () {
+  'use strict';
+  const DATA = window.__DATA__;
+  const SECS = DATA.sections;
+  const KEY = DATA.key || 'comp211-quiz2-v1';
+  const QUIZ_AT = new Date(DATA.quizAt).getTime();
+  const app = document.getElementById('app');
+
+  // ---------- tiny DOM helpers ----------
+  function h(tag, attrs) {
+    const el = document.createElement(tag);
+    for (const k in attrs || {}) {
+      const v = attrs[k];
+      if (v == null || v === false) continue;
+      if (k === 'class') el.className = v;
+      else if (k === 'html') el.innerHTML = v;
+      else if (k.slice(0, 2) === 'on') el.addEventListener(k.slice(2), v);
+      else el.setAttribute(k, v === true ? '' : v);
+    }
+    for (let i = 2; i < arguments.length; i++) add(el, arguments[i]);
+    return el;
+  }
+  function add(el, kid) {
+    if (kid == null || kid === false) return;
+    if (Array.isArray(kid)) kid.forEach(k => add(el, k));
+    else el.append(kid.nodeType ? kid : document.createTextNode(String(kid)));
+  }
+  const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+  const plural = (n, w) => n + ' ' + w + (n === 1 ? '' : 's');
+
+  // ---------- code colouring (comments, strings, keywords, numbers) ----------
+  const C_RE = /(\/\/[^\n]*|\/\*[\s\S]*?\*\/)|("(?:\\.|[^"\\\n])*"|'(?:\\.|[^'\\\n])*')|\b(int|char|short|long|float|double|void|unsigned|signed|const|static|struct|typedef|return|if|else|for|while|do|break|continue|sizeof|NULL|int8_t|int16_t|int32_t|int64_t|uint8_t|uint16_t|uint32_t|uint64_t|size_t|bool|true|false|switch|case|default|enum|union|extern)\b|\b(0[xX][0-9a-fA-F_]+|\d+(?:\.\d+)?(?:[eE][+-]?\d+)?[fFuUlL]*)\b|(^[ \t]*#[ \t]*\w+)/gm;
+  const SH_RE = /((?:^|[ \t])#[^\n]*)|("(?:\\.|[^"\\\n])*"|'[^'\n]*')|\b(if|then|elif|else|fi|for|in|do|done|while|case|esac|function|echo|exit|return)\b|(\$\{?[A-Za-z_#@?*0-9]+\}?)/gm;
+  function colour(pre) {
+    const lang = pre.getAttribute('data-lang') || '';
+    const re = /^(c|h|cpp)$/.test(lang) ? C_RE : /^(bash|sh|shell|make|makefile)$/.test(lang) ? SH_RE : null;
+    if (!re) return;
+    const code = pre.firstChild, text = code.textContent, frag = document.createDocumentFragment();
+    let last = 0, m;
+    re.lastIndex = 0;
+    while ((m = re.exec(text))) {
+      if (m.index > last) frag.append(text.slice(last, m.index));
+      const cls = m[1] ? 'tok-c' : m[2] ? 'tok-s' : m[3] ? 'tok-k' : m[4] ? (re === C_RE ? 'tok-n' : 'tok-v') : 'tok-p';
+      frag.append(h('span', { class: cls }, m[0]));
+      last = m.index + m[0].length;
+      if (!m[0].length) re.lastIndex++;
+    }
+    frag.append(text.slice(last));
+    code.textContent = '';
+    code.append(frag);
+  }
+  function md(src, cls) {
+    const el = h('div', { class: 'md' + (cls ? ' ' + cls : ''), html: MD.render(src) });
+    el.querySelectorAll('pre.code').forEach(colour);
+    return el;
+  }
+
+  // ---------- question index ----------
+  const QINDEX = {};
+  SECS.forEach(sec => {
+    sec.chunks.forEach((c, ci) => c.questions.forEach(q => { QINDEX[sec.id + '/' + q.id] = { q, sec, part: ci }; }));
+    sec.checkpoint.forEach(q => { QINDEX[sec.id + '/' + q.id] = { q, sec, part: -1 }; });
+  });
+  const TOTAL_Q = Object.keys(QINDEX).length;
+  const TOTAL_PARTS = SECS.reduce((n, s) => n + s.chunks.length, 0);
+
+  // ---------- progress ----------
+  const blank = Merge.blank;
+  const ls = {
+    get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+    set(k, v) { try { if (v == null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch (e) { /* private mode */ } },
+  };
+  function load() {
+    try { return Merge.merge(blank(), JSON.parse(ls.get(KEY) || '{}')); } catch (e) { return blank(); }
+  }
+  let P = load();
+  const secState = id => P.sec[id] || (P.sec[id] = { parts: {}, cp: null });
+  const mergeIn = o => { Merge.merge(P, o); };
+
+  // ---------- saving: browser storage always, plus an optional file ----------
+  let fileHandle = null, pendingHandle = null, fileNote = '', fileTimer = null;
+  const canFile = typeof window.showSaveFilePicker === 'function';
+  function persist() {
+    P.updated = Date.now();
+    ls.set(KEY, JSON.stringify(P));
+    if (fileHandle) { clearTimeout(fileTimer); fileTimer = setTimeout(writeFile, 700); }
+    scheduleSync();
+    badge();
+  }
+  async function writeFile() {
+    if (!fileHandle) return;
+    try {
+      const w = await fileHandle.createWritable();
+      await w.write(JSON.stringify(P, null, 1));
+      await w.close();
+      fileNote = 'Saved to ' + fileHandle.name + ' at ' + new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+    } catch (e) { fileNote = 'Could not write ' + fileHandle.name + ' (' + e.message + ')'; }
+    badge();
+  }
+  function idb() {
+    return new Promise((res, rej) => {
+      const r = indexedDB.open('comp211-quiz2', 1);
+      r.onupgradeneeded = () => r.result.createObjectStore('kv');
+      r.onsuccess = () => res(r.result);
+      r.onerror = () => rej(r.error);
+    });
+  }
+  async function idbGet(k) { const db = await idb(); return new Promise((res, rej) => { const t = db.transaction('kv').objectStore('kv').get(k); t.onsuccess = () => res(t.result); t.onerror = () => rej(t.error); }); }
+  async function idbSet(k, v) { const db = await idb(); return new Promise((res, rej) => { const t = db.transaction('kv', 'readwrite').objectStore('kv').put(v, k); t.onsuccess = () => res(); t.onerror = () => rej(t.error); }); }
+  async function adopt(hnd) {
+    try { const txt = await (await hnd.getFile()).text(); if (txt.trim()) mergeIn(JSON.parse(txt)); } catch (e) { /* new or unreadable file: just overwrite */ }
+    fileHandle = hnd; pendingHandle = null;
+    idbSet('handle', hnd).catch(() => {});
+    persist();
+    await writeFile();
+    route();
+  }
+  async function connectFile() {
+    try {
+      adopt(await window.showSaveFilePicker({ suggestedName: 'comp211-quiz2-progress.json', types: [{ description: 'Progress file', accept: { 'application/json': ['.json'] } }] }));
+    } catch (e) { /* cancelled */ }
+  }
+  async function resumeFile() {
+    if (!pendingHandle) return;
+    try { if ((await pendingHandle.requestPermission({ mode: 'readwrite' })) === 'granted') adopt(pendingHandle); } catch (e) { /* denied */ }
+  }
+  function exportFile() {
+    const a = h('a', { href: URL.createObjectURL(new Blob([JSON.stringify(P, null, 1)], { type: 'application/json' })), download: 'comp211-quiz2-progress.json' });
+    document.body.append(a); a.click(); a.remove();
+  }
+  function importFile() {
+    const inp = h('input', { type: 'file', accept: '.json,application/json' });
+    inp.onchange = async () => {
+      try { mergeIn(JSON.parse(await inp.files[0].text())); persist(); route(); toast('Progress merged in.'); } catch (e) { toast('That file is not a progress file.'); }
+    };
+    inp.click();
+  }
+  function badge() {
+    const el = document.getElementById('save-badge');
+    if (!el) return;
+    if (CLOUD) {
+      const at = syncAt ? new Date(syncAt).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }) : '';
+      el.textContent = syncState === 'out' ? '☁ Sign in to save your progress' : syncState === 'ok' ? '☁ Synced ' + at : syncState === 'offline' ? '☁ Offline: kept here, will sync' : '☁ Saving…';
+      el.className = 'save-badge' + (syncState === 'ok' ? ' file' : syncState === 'out' || syncState === 'offline' ? ' pending' : '');
+      return;
+    }
+    el.textContent = fileHandle ? '💾 ' + (fileNote || 'Saving to ' + fileHandle.name) : pendingHandle ? '💾 Resume saving to ' + pendingHandle.name : '💾 Saved in this browser';
+    el.className = 'save-badge' + (fileHandle ? ' file' : pendingHandle ? ' pending' : '');
+  }
+  function toast(msg) {
+    const t = h('div', { class: 'toast' }, msg);
+    document.body.append(t);
+    setTimeout(() => t.remove(), 2600);
+  }
+  if (canFile) idbGet('handle').then(async hnd => {
+    if (!hnd) return;
+    pendingHandle = hnd;
+    try { if ((await hnd.queryPermission({ mode: 'readwrite' })) === 'granted') return adopt(hnd); } catch (e) { /* ask on click */ }
+    badge();
+  }).catch(() => {});
+
+  // a = what was answered on the first try (option indexes, typed text, or the written answer)
+  function record(key, ok, a) {
+    const p = P.q[key] || { n: 0, r: 0 };
+    P.q[key] = { n: p.n + 1, r: p.r + (ok ? 1 : 0), ok: !!ok, t: Date.now() };
+    if (a != null) P.q[key].a = a;
+    persist();
+  }
+  const missedKeys = () => Object.keys(P.q).filter(k => QINDEX[k] && P.q[k].ok === false);
+  // an un-flagged question keeps a tombstone ({off: true}) so the removal reaches other devices
+  const isFlagged = k => !!(P.flags[k] && !P.flags[k].off);
+  const flagKeys = () => Object.keys(P.flags).filter(isFlagged);
+  const flagCount = () => flagKeys().length;
+
+  // ---------- account sync (only on the copy of the site that has a login) ----------
+  const CLOUD = !!DATA.cloud;
+  let syncCode = CLOUD ? ls.get(KEY + '-code') : null, syncUser = ls.get(KEY + '-user') || '';
+  let syncState = syncCode ? 'pending' : 'out', syncAt = 0, syncTimer = null, syncBusy = false, syncDirty = false, retryMs = 4000;
+  function scheduleSync(ms) {
+    if (!syncCode) return;
+    syncDirty = true;
+    if (syncState === 'ok') syncState = 'pending';
+    clearTimeout(syncTimer);
+    syncTimer = setTimeout(pushSync, ms == null ? 1500 : ms);
+  }
+  // One request does both directions: the server merges what we send into what it has and returns the result.
+  async function pushSync() {
+    if (!syncCode || syncBusy) return;
+    syncBusy = true; syncDirty = false;
+    clearTimeout(syncTimer);
+    try {
+      const text = JSON.stringify(P);
+      const r = await fetch('api/progress', { method: 'POST', headers: { 'content-type': 'application/json', 'x-sync-code': syncCode }, body: text, keepalive: text.length < 60000 });
+      if (r.status === 401) signOut('Your login was changed. Sign in again.');
+      else if (!r.ok) throw new Error('http ' + r.status);
+      else { mergeIn(await r.json()); ls.set(KEY, JSON.stringify(P)); syncState = 'ok'; syncAt = Date.now(); retryMs = 4000; }
+    } catch (e) { syncState = 'offline'; syncDirty = true; }
+    syncBusy = false;
+    if (syncDirty && syncCode) { if (syncState !== 'offline') syncState = 'pending'; scheduleSync(syncState === 'offline' ? (retryMs = Math.min(retryMs * 2, 60000)) : 1500); }
+    badge(); navCounts();
+  }
+  async function signIn(username, password) {
+    const r = await fetch('api/login', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ username, password }) });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok || !j.code) throw new Error(j.error || 'Could not sign in. Check your connection and try again.');
+    syncCode = j.code; syncUser = j.username || username;
+    ls.set(KEY + '-code', syncCode); ls.set(KEY + '-user', syncUser);
+    syncState = 'pending';
+    await pushSync();
+    return j;
+  }
+  function signOut(msg) {
+    syncCode = null; ls.set(KEY + '-code', null);
+    syncState = 'out'; clearTimeout(syncTimer);
+    badge();
+    if (msg) toast(msg);
+  }
+  if (CLOUD) {
+    // pick up answers from other devices when the tab comes back, and flush before it goes away
+    document.addEventListener('visibilitychange', () => { if (syncCode) pushSync(); });
+    window.addEventListener('online', () => { if (syncCode) pushSync(); });
+    window.addEventListener('pagehide', () => { if (syncCode && syncDirty) pushSync(); });
+  }
+
+  // ---------- one question ----------
+  // o: {key, mode:'learn'|'exam', num, next:{label, fn}, onDone, snapshot}
+  function questionCard(q, o) {
+    o = o || {};
+    const exam = o.mode === 'exam';
+    const st = { done: false, ok: null, first: null };
+    const card = h('section', { class: 'q-card q-' + q.type });
+    const fb = h('div', { class: 'q-fb', hidden: true });
+    const prev = o.key && P.q[o.key];
+    const head = h('div', { class: 'q-head' },
+      h('span', { class: 'q-num' }, o.num || 'Question'),
+      prev && !exam ? h('span', { class: 'q-prev ' + (prev.ok ? 'ok' : 'no') }, prev.ok ? 'right last time' : 'missed last time') : null,
+      flagButton());
+    card.append(head, md(q.q, 'q-text'));
+
+    function flagButton() {
+      const fkey = o.key || ('drill/' + (o.drill || 'x') + '/' + Date.now());
+      const btn = h('button', { class: 'flag-btn', title: 'Flag this question as wrong, unclear or badly worded', type: 'button' }, '⚑');
+      const row = h('div', { class: 'flag-row', hidden: true });
+      const note = h('input', { type: 'text', placeholder: 'What is wrong with it? (optional)', class: 'flag-note' });
+      const sync = () => { const on = isFlagged(fkey); btn.classList.toggle('on', on); btn.textContent = on ? '⚑ flagged' : '⚑'; row.hidden = !on; if (on) note.value = P.flags[fkey].note || ''; };
+      btn.onclick = () => {
+        if (isFlagged(fkey)) P.flags[fkey] = { t: Date.now(), off: true };
+        else P.flags[fkey] = { t: Date.now(), note: '', text: q.q, answer: answerText(q), where: o.key ? o.key : 'drill: ' + (o.drill || '') };
+        persist(); sync(); if (isFlagged(fkey)) note.focus();
+      };
+      note.onchange = note.oninput = () => { if (isFlagged(fkey)) { P.flags[fkey].note = note.value; P.flags[fkey].t = Date.now(); persist(); } };
+      row.append(note);
+      setTimeout(() => { head.after(row); sync(); }, 0);
+      return btn;
+    }
+
+    function verdict(kind, text) { return h('div', { class: 'verdict ' + kind }, text); }
+    function showFeedback(kind) {
+      fb.hidden = false;
+      fb.textContent = '';
+      const label = kind === 'right' ? '✓ Correct' : kind === 'retry' ? '✓ Right on the retry' : kind === 'self-part' ? '◐ Partly' : kind === 'self-got' ? '✓ Got it' : '✗ Not quite';
+      fb.append(verdict(kind === 'right' || kind === 'self-got' ? 'ok' : kind === 'retry' || kind === 'self-part' ? 'mid' : 'no', label));
+      if (kind === 'wrong' && q.type === 'short') fb.append(h('div', { class: 'ans' }, h('span', {}, 'Answer: '), md(answerText(q), 'inline')));
+      fb.append(md(q.why, 'why'));
+      if (o.next && !exam) {
+        const nb = h('button', { class: 'btn primary next-btn', type: 'button', onclick: o.next.fn }, o.next.label);
+        fb.append(nb);
+        if (card.contains(document.activeElement) || document.activeElement === document.body) nb.focus({ preventScroll: true });
+      }
+    }
+    function finalize(ok, kind) {
+      if (st.done) return;
+      st.done = true; st.ok = ok;
+      card.classList.add('locked', kind === 'right' || kind === 'self-got' ? 'is-right' : kind === 'retry' || kind === 'self-part' ? 'is-mid' : 'is-wrong');
+      card.querySelectorAll('input, textarea, button.opt, button.check').forEach(el => { if (!el.classList.contains('flag-note')) el.disabled = true; });
+      card.querySelectorAll('.actions, .try-again, .hint, .self-grade').forEach(el => { el.hidden = true; });
+      if (o.key) record(o.key, ok, st.ans);
+      if (card.contains(document.activeElement)) document.activeElement.blur();
+      showFeedback(kind);
+      if (o.onDone) o.onDone({ ok, kind });
+    }
+
+    let getAnswer = () => null;
+
+    if (q.type === 'mc') {
+      const multi = Array.isArray(q.answer);
+      const order = q.shuffle === false ? q.options.map((_, i) => i) : shuffle(q.options.map((_, i) => i));
+      const chosen = new Set();
+      const list = h('div', { class: 'opts' + (multi ? ' multi' : '') });
+      const btns = order.map((oi, pos) => {
+        const b = h('button', { class: 'opt', type: 'button', 'data-i': oi },
+          h('span', { class: 'opt-key' }, String.fromCharCode(65 + pos)), h('span', { class: 'opt-text', html: MD.renderInline(q.options[oi]) }));
+        b.onclick = () => {
+          if (st.done) return;
+          if (multi || exam) {
+            if (!multi) { chosen.clear(); btns.forEach(x => x.classList.remove('sel')); }
+            if (chosen.has(oi) && multi) { chosen.delete(oi); b.classList.remove('sel'); } else { chosen.add(oi); b.classList.add('sel'); }
+          } else { chosen.add(oi); gradeMc(); }
+        };
+        return b;
+      });
+      add(list, btns);
+      card.append(list);
+      const want = new Set([].concat(q.answer));
+      function gradeMc() {
+        const ok = Grade.grade(q, multi ? [...chosen] : [...chosen][0]).ok;
+        st.ans = [...chosen];
+        btns.forEach(b => {
+          const i = +b.getAttribute('data-i');
+          if (want.has(i)) b.classList.add('correct');
+          if (chosen.has(i) && !want.has(i)) b.classList.add('incorrect');
+          if (chosen.has(i)) b.classList.add('sel');
+        });
+        finalize(ok, ok ? 'right' : 'wrong');
+      }
+      if (multi && !exam) card.append(h('button', { class: 'btn check', type: 'button', onclick: () => { if (chosen.size) gradeMc(); } }, 'Check'));
+      getAnswer = () => gradeMc;
+    }
+
+    if (q.type === 'short' || q.type === 'blanks') {
+      const specs = q.type === 'short' ? [q] : q.blanks;
+      const rows = specs.map((sp, i) => {
+        const inp = h('input', { type: 'text', class: 'ans-input mode-' + (sp.mode || 'text'), placeholder: sp.placeholder || hintFor(sp.mode), autocomplete: 'off', autocapitalize: 'off', autocorrect: 'off', spellcheck: 'false', 'aria-label': sp.label || 'answer' });
+        const mark = h('span', { class: 'mark' });
+        const fix = h('span', { class: 'fix' });
+        inp.onkeydown = e => {
+          if (e.key !== 'Enter') return;
+          e.preventDefault(); e.stopPropagation();
+          const nxt = rows[i + 1];
+          if (nxt && !nxt.inp.value) nxt.inp.focus(); else if (!exam) check();
+        };
+        return { sp, inp, mark, fix };
+      });
+      if (q.type === 'short') card.append(h('div', { class: 'short-row' }, rows[0].inp, rows[0].mark));
+      else card.append(h('div', { class: 'blanks' }, rows.map(r => h('label', { class: 'blank' }, h('span', { class: 'blank-label', html: MD.label(r.sp.label) }), h('span', { class: 'blank-in' }, r.inp, r.mark, r.fix)))));
+      const actions = h('div', { class: 'actions' });
+      const showBtn = h('button', { class: 'btn ghost', type: 'button', hidden: true, onclick: () => { paint(true); finalize(false, 'wrong'); } }, 'Show the answer');
+      const hint = q.hint ? h('div', { class: 'hint', hidden: true }, md('**Hint:** ' + q.hint, 'inline')) : null;
+      const again = h('div', { class: 'try-again', hidden: true }, 'Not yet. Fix it and check again, or show the answer.');
+      const typed = () => rows.map(r => r.inp.value.trim().slice(0, 160));
+      function paint(final) {
+        if (final && st.ans == null) st.ans = typed();
+        const res = rows.map(r => Grade.checkOne(r.sp, r.inp.value));
+        rows.forEach((r, i) => {
+          r.mark.textContent = r.inp.value.trim() || final ? (res[i] ? '✓' : '✗') : '';
+          r.mark.className = 'mark ' + (res[i] ? 'ok' : 'no');
+          r.inp.classList.toggle('bad', !res[i] && (!!r.inp.value.trim() || final));
+          r.inp.classList.toggle('good', res[i]);
+          if (final && !res[i] && q.type === 'blanks') r.fix.innerHTML = '→ ' + MD.inline('`' + r.sp.accept[0] + '`');
+        });
+        return res.every(Boolean);
+      }
+      function check() {
+        if (st.done) return;
+        if (!rows.some(r => r.inp.value.trim())) return;
+        const ok = paint(false);
+        if (st.first === null) { st.first = ok; st.ans = typed(); }
+        if (ok) { paint(true); return finalize(st.first, st.first ? 'right' : 'retry'); }
+        again.hidden = false; showBtn.hidden = false; if (hint) hint.hidden = false;
+        const firstBad = rows.find(r => r.inp.classList.contains('bad') || !r.inp.value.trim());
+        if (firstBad) firstBad.inp.focus();
+      }
+      if (!exam) { actions.append(h('button', { class: 'btn check', type: 'button', onclick: check }, 'Check'), showBtn); card.append(actions, again); if (hint) card.append(hint); }
+      getAnswer = () => () => { const ok = paint(true); finalize(ok, ok ? 'right' : 'wrong'); };
+      card.focusFirst = () => rows[0].inp.focus({ preventScroll: true });
+    }
+
+    if (q.type === 'self') {
+      const ta = h('textarea', { class: 'self-input', rows: q.lines || 6, placeholder: 'Write it here, or on paper (better practice for a paper quiz). Then compare.', spellcheck: 'false' });
+      const model = h('div', { class: 'model', hidden: true });
+      const show = h('button', { class: 'btn check', type: 'button' }, 'Show the model answer');
+      const open = () => {
+        if (!model.hidden) return;
+        model.hidden = false; show.hidden = true;
+        model.append(h('div', { class: 'model-label' }, 'Model answer'), md(q.model),
+          h('div', { class: 'model-label' }, 'Did yours have these?'),
+          h('ul', { class: 'rubric' }, q.rubric.map(r => h('li', {}, h('label', {}, h('input', { type: 'checkbox' }), h('span', { html: MD.renderInline(r) }))))),
+          h('div', { class: 'self-grade' },
+            h('button', { class: 'btn good', type: 'button', onclick: () => self('got') }, 'Got it'),
+            h('button', { class: 'btn mid', type: 'button', onclick: () => self('part') }, 'Partly'),
+            h('button', { class: 'btn bad', type: 'button', onclick: () => self('miss') }, 'Missed it')));
+      };
+      const self = g => { st.ans = [g, ta.value.trim().slice(0, 900)]; finalize(g === 'got', g === 'got' ? 'self-got' : g === 'part' ? 'self-part' : 'wrong'); };
+      show.onclick = open;
+      card.append(ta, h('div', { class: 'actions' }, exam ? null : show), model);
+      getAnswer = () => open;
+      card.focusFirst = () => ta.focus({ preventScroll: true });
+    }
+
+    card.append(fb);
+    return { el: card, st, finish: () => { if (!st.done) getAnswer()(); }, isSelf: q.type === 'self' };
+  }
+  function hintFor(mode) {
+    return { hex: '0x…', bits: 'bits', num: 'number', code: 'C expression', cmd: 'command', list: 'in order: a b c', set: 'any order: a b c' }[mode] || 'answer';
+  }
+  function answerText(q) {
+    if (q.type === 'mc') return [].concat(q.answer).map(i => q.options[i]).join('; ');
+    if (q.type === 'short') return '`' + q.accept[0] + '`';
+    if (q.type === 'blanks') return q.blanks.map(b => '- ' + b.label.replace(/[*_^~]/g, '\\$&') + ' = `' + b.accept[0] + '`').join('\n');
+    return '(see the model answer)';
+  }
+
+  // ---------- views ----------
+  function page() {
+    app.textContent = '';
+    for (let i = 0; i < arguments.length; i++) add(app, arguments[i]);
+    window.scrollTo(0, 0);
+  }
+  const go = hash => { if (location.hash === hash) route(); else location.hash = hash; };
+  function reveal(el) {
+    requestAnimationFrame(() => {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (el.focusFirst) setTimeout(() => el.focusFirst(), 250);
+    });
+  }
+
+  function secStats(sec) {
+    const st = P.sec[sec.id] || { parts: {} };
+    const parts = sec.chunks.filter(c => st.parts && st.parts[c.id]).length;
+    const keys = Object.keys(QINDEX).filter(k => QINDEX[k].sec === sec);
+    const right = keys.filter(k => P.q[k] && P.q[k].ok).length;
+    return { parts, total: sec.chunks.length, cp: st.cp, right, qs: keys.length, done: parts === sec.chunks.length && !!st.cp };
+  }
+
+  function countdown() {
+    const ms = QUIZ_AT - Date.now();
+    if (ms <= 0) return 'Quiz 2 was Wed Oct 14';
+    const d = Math.floor(ms / 864e5), hr = Math.floor((ms % 864e5) / 36e5);
+    return (d ? plural(d, 'day') + ' ' : '') + plural(hr, 'hour') + ' until Quiz 2 · Wed Oct 14, in class';
+  }
+
+  function home() {
+    const partsDone = SECS.reduce((n, s) => n + secStats(s).parts, 0);
+    const right = Object.keys(P.q).filter(k => QINDEX[k] && P.q[k].ok).length;
+    const seen = Object.keys(P.q).filter(k => QINDEX[k]).length;
+    const missed = missedKeys().length;
+    let cont = null;
+    if (P.last && SECS.find(s => s.id === P.last.sec)) {
+      const s = SECS.find(x => x.id === P.last.sec);
+      cont = h('a', { class: 'btn primary big', href: '#/s/' + s.id + '/' + P.last.step }, 'Continue: ' + s.title.replace(/:.*/, '') + (P.last.step > s.chunks.length ? ', checkpoint' : ', part ' + P.last.step) + ' →');
+    } else cont = h('a', { class: 'btn primary big', href: '#/s/' + SECS[0].id + '/1' }, 'Start with section 1 →');
+
+    page(
+      h('header', { class: 'hero' },
+        h('div', { class: 'eyebrow' }, countdown()),
+        h('h1', {}, DATA.title || 'COMP 211 · Quiz 2 study guide'),
+        h('p', { class: 'lede' }, 'Read a short part, answer a few questions on it, move on. Every section ends with a checkpoint. Your progress saves as you go.'),
+        h('div', { class: 'hero-row' }, cont,
+          h('div', { class: 'meters' },
+            meter('Parts read', partsDone, TOTAL_PARTS),
+            meter('Questions right', right, TOTAL_Q, seen ? plural(seen, 'question') + ' tried' : null)))),
+      CLOUD && !syncCode ? h('a', { class: 'signin-note', href: '#/save' }, h('b', {}, 'Sign in to save your progress to your account.'), ' Until then it only lives in this browser. →') : null,
+      h('nav', { class: 'tools' },
+        tool('#/drills', 'Drills', 'Endless practice with fresh numbers'),
+        tool('#/missed', 'Missed' + (missed ? ' (' + missed + ')' : ''), 'Redo what you got wrong'),
+        tool('#/mock', 'Mock quiz', 'Timed, no feedback until the end'),
+        tool('#/cheats', 'Rules to know cold', 'One page, every section'),
+        tool('#/save', CLOUD ? 'Account' : 'Saving', CLOUD ? (syncCode ? 'Signed in' + (syncUser ? ' as ' + syncUser : '') : 'Sign in to sync') : fileHandle ? 'Saving to ' + fileHandle.name : 'Back up or move your progress')),
+      h('h2', { class: 'list-title' }, 'Sections'),
+      !DATA.route.length ? null : h('p', { class: 'route' }, h('b', {}, 'Short on time? '), 'All ' + SECS.length + ' sections are about ' + Math.round(SECS.reduce((n, x) => n + x.minutes, 0) / 60) + ' hours. Do the ★ ones first, in this order: ',
+        DATA.route.map((id, i) => { const k = SECS.findIndex(x => x.id === id); return [i ? ' → ' : '', h('a', { href: '#/s/' + id }, String(k + 1))]; }),
+        '. For the rest, take the checkpoint first and only read the parts you miss.'),
+      h('ol', { class: 'sec-list' }, SECS.map((sec, i) => {
+        const s = secStats(sec);
+        const pct = Math.round(100 * s.parts / s.total);
+        return h('li', {}, h('a', { class: 'sec-card' + (s.done ? ' done' : ''), href: '#/s/' + sec.id },
+          h('span', { class: 'sec-n' }, s.done ? '✓' : String(i + 1)),
+          h('span', { class: 'sec-main' },
+            h('span', { class: 'sec-title' }, sec.title, DATA.high.includes(sec.id) ? h('span', { class: 'star', title: 'High-yield: most quiz points, most practice needed' }, '★ high-yield') : null),
+            h('span', { class: 'sec-blurb' }, sec.blurb),
+            h('span', { class: 'sec-meta' }, sec.objective + ' · ' + sec.sources + ' · about ' + sec.minutes + ' min')),
+          h('span', { class: 'sec-prog' },
+            h('span', { class: 'bar' }, h('span', { style: 'width:' + pct + '%' })),
+            h('span', { class: 'sec-count' }, s.parts + '/' + s.total + ' parts' + (s.cp ? ' · checkpoint ' + s.cp.best + '%' : '')))));
+      })),
+      h('p', { class: 'foot' }, 'Unofficial study notes written by a student, not course material. If something looks off, flag it with ⚑ and check the lecture slides. ',
+        h('a', { href: '#/flags' }, 'Flagged questions' + (flagCount() ? ' (' + flagCount() + ')' : ''))));
+  }
+  function meter(label, n, total, sub) {
+    return h('div', { class: 'meter' }, h('div', { class: 'meter-top' }, h('span', {}, label), h('b', {}, n + ' / ' + total)),
+      h('div', { class: 'bar' }, h('span', { style: 'width:' + (total ? 100 * n / total : 0) + '%' })), sub ? h('div', { class: 'meter-sub' }, sub) : null);
+  }
+  const tool = (href, title, sub) => h('a', { class: 'tool', href }, h('b', {}, title), h('span', {}, sub));
+
+  function sectionView(sec, step) {
+    const st = secState(sec.id);
+    const n = sec.chunks.length;
+    if (!step) step = P.last && P.last.sec === sec.id ? P.last.step : Math.min(n + 1, sec.chunks.findIndex(c => !st.parts[c.id]) + 1 || n + 1);
+    step = Math.max(1, Math.min(n + 1, step));
+    P.last = { sec: sec.id, step };
+    persist();
+    const idx = SECS.indexOf(sec);
+    const rail = h('nav', { class: 'rail', 'aria-label': 'Parts' },
+      sec.chunks.map((c, i) => h('a', { class: 'rail-step' + (st.parts[c.id] ? ' done' : '') + (i + 1 === step ? ' cur' : ''), href: '#/s/' + sec.id + '/' + (i + 1), title: c.title }, String(i + 1))),
+      h('a', { class: 'rail-step cp' + (st.cp ? ' done' : '') + (step === n + 1 ? ' cur' : ''), href: '#/s/' + sec.id + '/' + (n + 1), title: 'Checkpoint' }, st.cp ? 'Checkpoint ' + st.cp.best + '%' : 'Checkpoint'));
+    const top = h('header', { class: 'sec-head' },
+      h('a', { class: 'back', href: '#/' }, '← All sections'),
+      h('div', { class: 'eyebrow' }, 'Section ' + (idx + 1) + ' of ' + SECS.length + ' · ' + sec.objective + ' · ' + sec.sources),
+      h('h1', {}, sec.title), rail);
+    if (step <= n) chunkView(sec, step - 1, top); else checkpointView(sec, top);
+  }
+
+  function chunkView(sec, ci, top) {
+    const c = sec.chunks[ci], n = sec.chunks.length, st = secState(sec.id);
+    const qs = h('div', { class: 'qs' });
+    const nextHash = '#/s/' + sec.id + '/' + (ci + 2);
+    const nextLabel = ci + 1 < n ? 'Next part: ' + sec.chunks[ci + 1].title + ' →' : 'Start the checkpoint →';
+    const skip = h('a', { class: 'skip', href: nextHash }, ci + 1 < n ? 'Skip to the next part' : 'Skip to the checkpoint');
+    let i = 0;
+    function showQ() {
+      const q = c.questions[i], last = i === c.questions.length - 1;
+      const card = questionCard(q, {
+        key: sec.id + '/' + q.id,
+        num: 'Question ' + (i + 1) + ' of ' + c.questions.length,
+        next: last ? { label: nextLabel, fn: () => go(nextHash) } : { label: 'Next question ↓', fn: e => { e.target.remove(); i++; showQ(); } },
+        onDone: () => { if (last) { st.parts[c.id] = true; persist(); skip.hidden = true; document.querySelectorAll('.rail-step')[ci].classList.add('done'); } },
+      });
+      qs.append(card.el);
+      if (i > 0) reveal(card.el);
+    }
+    page(top,
+      h('article', { class: 'read' },
+        h('div', { class: 'read-label' }, 'Read · part ' + (ci + 1) + ' of ' + n),
+        h('h2', {}, c.title), md(c.read)),
+      h('div', { class: 'qs-label' }, 'Now answer · ' + plural(c.questions.length, 'question')),
+      qs, skip);
+    showQ();
+  }
+
+  // one-at-a-time quiz used by checkpoints, the missed list and drills-from-content
+  function runQuiz(top, items, opt) {
+    let i = 0;
+    const results = [];
+    const holder = h('div', { class: 'qs' });
+    const prog = h('div', { class: 'quiz-prog' });
+    function show() {
+      const it = items[i], last = i === items.length - 1;
+      prog.textContent = '';
+      prog.append(h('span', {}, 'Question ' + (i + 1) + ' of ' + items.length), h('span', { class: 'bar' }, h('span', { style: 'width:' + (100 * i / items.length) + '%' })));
+      holder.textContent = '';
+      const card = questionCard(it.q, {
+        key: it.key, num: it.label || 'Question ' + (i + 1),
+        next: { label: last ? 'See how you did →' : 'Next question →', fn: () => { i++; if (i < items.length) show(); else finish(); } },
+        onDone: r => results.push({ it, ok: r.ok }),
+      });
+      holder.append(card.el);
+      window.scrollTo(0, Math.max(0, prog.getBoundingClientRect().top + window.scrollY - 70));
+      if (card.el.focusFirst) setTimeout(() => card.el.focusFirst(), 50);
+    }
+    function finish() {
+      const right = results.filter(r => r.ok).length, pct = Math.round(100 * right / items.length);
+      const missed = results.filter(r => !r.ok).map(r => r.it);
+      if (opt.onFinish) opt.onFinish(pct, right, items.length);
+      page(top, h('section', { class: 'result' },
+        h('div', { class: 'score' }, right + ' / ' + items.length),
+        h('p', {}, pct === 100 ? 'All right on the first try.' : pct >= 80 ? 'Solid. Clean up the misses and move on.' : pct >= 50 ? 'Getting there. Redo the misses, then reread the parts they came from.' : 'This one needs another pass. Reread the parts, then try again.'),
+        missed.length ? h('ul', { class: 'miss-list' }, missed.map(m => h('li', {}, md(m.q.q.split('\n')[0].slice(0, 160), 'inline')))) : null,
+        h('div', { class: 'result-actions' },
+          missed.length ? h('button', { class: 'btn primary', onclick: () => runQuiz(top, missed, { title: opt.title, after: opt.after }) }, 'Retry the ' + missed.length + ' you missed') : null,
+          opt.after || null,
+          h('a', { class: 'btn', href: '#/' }, 'All sections'))));
+    }
+    page(top, opt.intro || null, prog, holder);
+    show();
+  }
+
+  function checkpointView(sec, top) {
+    const st = secState(sec.id), idx = SECS.indexOf(sec), nxt = SECS[idx + 1];
+    const items = sec.checkpoint.map(q => ({ q, key: sec.id + '/' + q.id }));
+    const after = nxt ? h('a', { class: 'btn primary', href: '#/s/' + nxt.id + '/1' }, 'Next section: ' + nxt.title.replace(/:.*/, '') + ' →') : h('a', { class: 'btn primary', href: '#/mock' }, 'Take the mock quiz →');
+    const start = () => runQuiz(top, items, {
+      after,
+      onFinish: pct => {
+        st.cp = { best: Math.max(pct, st.cp ? st.cp.best : 0), last: pct, n: (st.cp ? st.cp.n : 0) + 1 };
+        persist();
+        const r = top.querySelector('.rail-step.cp');
+        if (r) { r.textContent = 'Checkpoint ' + st.cp.best + '%'; r.classList.add('done'); }
+      },
+    });
+    page(top, h('section', { class: 'result' },
+      h('h2', {}, 'Checkpoint'),
+      h('p', {}, plural(items.length, 'question') + ' on the whole section, new numbers, nothing to look back at. Work them on paper like the real quiz.'),
+      st.cp ? h('p', { class: 'muted' }, 'Best so far: ' + st.cp.best + '% · last: ' + st.cp.last + '% · ' + plural(st.cp.n, 'attempt')) : null,
+      h('div', { class: 'result-actions' }, h('button', { class: 'btn primary big', onclick: start }, st.cp ? 'Take it again' : 'Start the checkpoint'))));
+  }
+
+  function simpleHead(title, sub) {
+    return h('header', { class: 'sec-head' }, h('a', { class: 'back', href: '#/' }, '← All sections'), h('h1', {}, title), sub ? h('p', { class: 'lede' }, sub) : null);
+  }
+
+  function drillsView(id) {
+    const g = Gen.GENS.find(x => x.id === id);
+    if (!g) {
+      return page(simpleHead('Drills', 'Fresh numbers every time. Do these on paper first, then type the answer.'),
+        h('div', { class: 'drill-grid' }, Gen.GENS.map(x => {
+          const d = P.drills[x.id];
+          return h('a', { class: 'tool drill', href: '#/drills/' + x.id }, h('b', {}, x.title), h('span', {}, x.blurb),
+            h('span', { class: 'drill-stat' }, d ? d.r + ' of ' + d.n + ' right · best streak ' + d.best : 'not tried yet'));
+        })));
+    }
+    const d = P.drills[g.id] || (P.drills[g.id] = { n: 0, r: 0, streak: 0, best: 0 });
+    const stat = h('div', { class: 'quiz-prog' });
+    const holder = h('div', { class: 'qs' });
+    const paint = () => { stat.textContent = ''; stat.append(h('span', {}, 'Streak ' + d.streak + ' · best ' + d.best + ' · ' + d.r + ' of ' + d.n + ' right')); };
+    function next() {
+      holder.textContent = '';
+      const card = questionCard(g.make(), {
+        drill: g.id, num: g.title,
+        next: { label: 'Another one →', fn: next },
+        onDone: r => { d.n++; if (r.ok) { d.r++; d.streak++; d.best = Math.max(d.best, d.streak); } else d.streak = 0; persist(); paint(); },
+      });
+      holder.append(card.el);
+      if (card.el.focusFirst) setTimeout(() => card.el.focusFirst(), 50);
+    }
+    page(h('header', { class: 'sec-head' }, h('a', { class: 'back', href: '#/drills' }, '← All drills'), h('h1', {}, g.title), h('p', { class: 'lede' }, g.blurb)), stat, holder);
+    paint(); next();
+  }
+
+  function missedView() {
+    const keys = missedKeys();
+    const top = simpleHead('Missed questions', 'Everything you got wrong the last time you saw it. Get one right on the first try and it leaves this list.');
+    if (!keys.length) return page(top, h('section', { class: 'result' }, h('p', {}, Object.keys(P.q).length ? 'Nothing here. Every question you have tried, you last got right.' : 'Nothing here yet. Work through a section first.')));
+    const bySec = SECS.map(sec => ({ sec, keys: keys.filter(k => QINDEX[k].sec === sec) })).filter(x => x.keys.length);
+    const start = ks => runQuiz(top, shuffle(ks).map(k => ({ q: QINDEX[k].q, key: k, label: QINDEX[k].sec.title.replace(/:.*/, '') })), { after: h('a', { class: 'btn', href: '#/missed' }, 'Back to the missed list') });
+    page(top,
+      h('div', { class: 'result-actions' }, h('button', { class: 'btn primary big', onclick: () => start(keys) }, 'Practice all ' + keys.length)),
+      h('ul', { class: 'miss-secs' }, bySec.map(x => h('li', {}, h('span', {}, x.sec.title), h('button', { class: 'btn', onclick: () => start(x.keys) }, plural(x.keys.length, 'question'))))));
+  }
+
+  function cheatsView() {
+    page(simpleHead('Rules to know cold', 'No cheat sheet is allowed on the quiz, so these have to be in your head.'),
+      SECS.map((sec, i) => h('section', { class: 'cheat' }, h('h3', {}, h('a', { href: '#/s/' + sec.id }, (i + 1) + '. ' + sec.title)),
+        h('ul', {}, sec.cheats.map(c => h('li', { html: MD.renderInline(c) }))))));
+  }
+
+  function flagsView() {
+    const keys = flagKeys().sort((a, b) => P.flags[b].t - P.flags[a].t);
+    const text = () => keys.map(k => '[' + P.flags[k].where + ']\nNote: ' + (P.flags[k].note || '(none)') + '\nQ: ' + P.flags[k].text + '\nKey: ' + P.flags[k].answer).join('\n\n---\n\n');
+    page(simpleHead('Flagged questions', 'Questions you marked as wrong, unclear or badly worded. They are saved with your progress.'),
+      keys.length ? h('div', { class: 'result-actions' }, h('button', { class: 'btn', onclick: () => navigator.clipboard.writeText(text()).then(() => toast('Copied.')) }, 'Copy all flags as text')) : h('section', { class: 'result' }, h('p', {}, 'No flags. Use ⚑ on any question.')),
+      keys.map(k => h('section', { class: 'q-card' },
+        h('div', { class: 'q-head' }, h('span', { class: 'q-num' }, P.flags[k].where), h('button', { class: 'flag-btn on', onclick: () => { P.flags[k] = { t: Date.now(), off: true }; persist(); flagsView(); } }, 'remove')),
+        md(P.flags[k].text, 'q-text'), h('div', { class: 'ans' }, h('span', {}, 'Key: '), md(P.flags[k].answer, 'inline')),
+        P.flags[k].note ? h('p', { class: 'muted' }, 'Your note: ' + P.flags[k].note) : null)));
+  }
+
+  function saveView() {
+    const top = simpleHead('Saving your progress', CLOUD
+      ? 'Signed in, every answer is saved to your account as you go and follows you to any device. This browser keeps a copy too, so studying offline still works.'
+      : 'Progress is saved in this browser automatically, every time you answer. A file is a backup, and the way to move progress to another browser or computer.');
+    page(top,
+      CLOUD ? loginCard() : null,
+      h('section', { class: 'result left' },
+        h('h3', {}, 'Save to a file'),
+        canFile
+          ? h('div', {},
+              h('p', {}, fileHandle ? fileNote || 'Saving to ' + fileHandle.name + '.' : pendingHandle ? 'This browser was saving to ' + pendingHandle.name + '. One click to carry on.' : 'Pick a file once. After that every answer is written to it automatically.'),
+              h('div', { class: 'result-actions' },
+                pendingHandle && !fileHandle ? h('button', { class: 'btn primary', onclick: resumeFile }, 'Resume saving to ' + pendingHandle.name) : null,
+                h('button', { class: 'btn' + (fileHandle || pendingHandle ? '' : ' primary'), onclick: connectFile }, fileHandle ? 'Save to a different file' : 'Choose a file to save to')))
+          : h('p', {}, 'This browser cannot write to a file directly (Chrome and Edge can). Use Export below instead.'),
+        h('h3', {}, 'Move it by hand'),
+        h('div', { class: 'result-actions' },
+          h('button', { class: 'btn', onclick: exportFile }, 'Export progress file'),
+          h('button', { class: 'btn', onclick: importFile }, 'Import a progress file')),
+        h('p', { class: 'muted' }, 'Importing merges: for each question the most recent answer wins, and nothing is lost.'),
+        h('h3', {}, 'Start over'),
+        h('div', { class: 'result-actions' }, h('button', { class: 'btn bad', onclick: () => { if (confirm(syncCode ? 'Erase all progress, in your account and on every device?' : 'Erase all progress in this browser?')) { P = blank(); P.resetAt = Date.now(); persist(); route(); } } }, 'Reset all progress'))));
+  }
+
+  function loginCard() {
+    const box = h('section', { class: 'result left login' });
+    if (syncCode) {
+      const when = syncAt ? 'Last synced ' + new Date(syncAt).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }) + '.' : syncState === 'offline' ? 'Offline right now. Answers are kept in this browser and sent when the connection is back.' : 'Syncing…';
+      add(box, [h('h3', {}, 'Signed in' + (syncUser ? ' as ' + syncUser : '')), h('p', {}, when),
+        h('div', { class: 'result-actions' },
+          h('button', { class: 'btn primary', onclick: () => pushSync().then(() => { toast(syncState === 'ok' ? 'Synced.' : 'Could not reach the server.'); saveView(); }) }, 'Sync now'),
+          h('button', { class: 'btn', onclick: () => { signOut(); saveView(); } }, 'Sign out on this device')),
+        h('p', { class: 'muted' }, 'Signing out keeps the progress in this browser. It stops syncing until you sign in again.')]);
+      return box;
+    }
+    const title = h('h3', {}, 'Sign in');
+    const blurb = h('p', {}, 'Sign in to save your progress to your account.');
+    const user = h('input', { type: 'text', class: 'ans-input', name: 'username', autocomplete: 'username', autocapitalize: 'off', spellcheck: 'false', placeholder: 'username', value: syncUser, required: true });
+    const pass = h('input', { type: 'password', class: 'ans-input', name: 'password', autocomplete: 'current-password', placeholder: 'password', required: true });
+    const err = h('p', { class: 'try-again', hidden: true });
+    const btn = h('button', { class: 'btn primary', type: 'submit' }, 'Sign in');
+    const form = h('form', { class: 'login-form', onsubmit: async e => {
+      e.preventDefault();
+      btn.disabled = true; err.hidden = true;
+      try { const j = await signIn(user.value, pass.value); toast(j.created ? 'Login created. Progress now saves to your account.' : 'Signed in. Progress synced.'); route(); }
+      catch (ex) { err.textContent = ex.message; err.hidden = false; btn.disabled = false; }
+    } }, user, pass, btn);
+    add(box, [title, blurb, form, err]);
+    fetch('api/login').then(r => r.json()).then(j => {
+      if (j.exists) return;
+      title.textContent = 'Create your login';
+      blurb.textContent = 'First time here: pick a username and a password (6 characters or more). That becomes the one login for this site, on every device.';
+      pass.setAttribute('autocomplete', 'new-password');
+      btn.textContent = 'Create login';
+    }).catch(() => {});
+    return box;
+  }
+
+  function mockView() {
+    const top = simpleHead('Mock quiz', 'One question from every section plus extras from the high-yield ones. No feedback until you hand it in. The real quiz is about 45 minutes, on paper, closed notes.');
+    function build() {
+      const picked = [];
+      let selfs = 0;
+      const take = sec => {
+        const pool = shuffle(sec.checkpoint.concat(...sec.chunks.map(c => c.questions.slice(-1)))).filter(q => !picked.some(p => p.q === q));
+        const q = pool.find(x => x.type !== 'self' || selfs < 2);
+        if (!q) return;
+        if (q.type === 'self') selfs++;
+        picked.push({ q, key: sec.id + '/' + q.id, sec });
+      };
+      SECS.forEach(take);
+      SECS.filter(s => DATA.high.includes(s.id)).forEach(take);
+      return picked;
+    }
+    function start() {
+      const items = build();
+      const endAt = Date.now() + 45 * 60000;
+      const clock = h('div', { class: 'clock' });
+      const tick = setInterval(() => {
+        if (!document.body.contains(clock)) return clearInterval(tick);
+        const s = Math.round((endAt - Date.now()) / 1000);
+        clock.textContent = s >= 0 ? Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0') + ' left' : 'Time is up (' + Math.floor(-s / 60) + ' min over)';
+        clock.classList.toggle('over', s < 0);
+      }, 500);
+      const banner = h('div', { class: 'mock-score', hidden: true });
+      const cards = items.map((it, i) => questionCard(it.q, { key: it.key, mode: 'exam', num: 'Question ' + (i + 1) + ' · ' + it.sec.title.replace(/:.*/, ''), onDone: () => score() }));
+      let handed = false;
+      function score() {
+        if (!handed) return;
+        const done = cards.filter(c => c.st.done), right = done.filter(c => c.st.ok).length;
+        banner.hidden = false;
+        banner.textContent = right + ' / ' + cards.length + (done.length < cards.length ? ' so far. Mark the written answers below to finish the score.' : ' · ' + Math.round(100 * right / cards.length) + '%');
+        if (done.length === cards.length && !banner.dataset.saved) { banner.dataset.saved = '1'; P.mocks.push({ t: Date.now(), right, total: cards.length }); persist(); }
+      }
+      const hand = h('button', { class: 'btn primary big', onclick: () => {
+        if (!confirm('Hand it in? Unanswered questions count as wrong.')) return;
+        handed = true; clearInterval(tick); hand.remove();
+        cards.forEach(c => c.finish());
+        score(); window.scrollTo(0, 0);
+      } }, 'Hand it in');
+      page(top, clock, banner, h('div', { class: 'qs' }, cards.map(c => c.el)), h('div', { class: 'result-actions' }, hand));
+    }
+    page(top, h('section', { class: 'result' },
+      P.mocks.length ? h('p', { class: 'muted' }, 'Past mocks: ' + P.mocks.map(m => m.right + '/' + m.total).join(', ')) : null,
+      h('div', { class: 'result-actions' }, h('button', { class: 'btn primary big', onclick: start }, 'Start a 45-minute mock'))));
+  }
+
+  // ---------- router ----------
+  function route() {
+    const parts = location.hash.replace(/^#\/?/, '').split('/').filter(Boolean);
+    document.querySelectorAll('.topnav a').forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#/' + (parts[0] && parts[0] !== 's' ? parts[0] : '')));
+    navCounts();
+    badge();
+    if (parts[0] === 's') {
+      const sec = SECS.find(s => s.id === parts[1]);
+      if (sec) return sectionView(sec, parseInt(parts[2], 10) || 0);
+    }
+    if (parts[0] === 'drills') return drillsView(parts[1]);
+    if (parts[0] === 'missed') return missedView();
+    if (parts[0] === 'cheats') return cheatsView();
+    if (parts[0] === 'flags') return flagsView();
+    if (parts[0] === 'save') return saveView();
+    if (parts[0] === 'mock') return mockView();
+    home();
+  }
+  function navCounts() {
+    const m = document.getElementById('nav-missed');
+    if (m) m.textContent = 'Missed' + (missedKeys().length ? ' (' + missedKeys().length + ')' : '');
+  }
+  window.addEventListener('hashchange', route);
+
+  // Enter = the primary "next" button; A–E / 1–5 pick a multiple-choice option
+  document.addEventListener('keydown', e => {
+    const t = e.target, typing = t && (t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || (t.tagName === 'INPUT' && t.type !== 'checkbox'));
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    if (e.key === 'Enter' && t && (t.tagName === 'BUTTON' || t.tagName === 'A')) return;
+    if (e.key === 'Enter' && !typing) {
+      const btns = [...document.querySelectorAll('.next-btn')].filter(b => b.offsetParent);
+      if (btns.length) { e.preventDefault(); btns[btns.length - 1].click(); }
+      return;
+    }
+    if (typing) return;
+    const k = e.key.toLowerCase();
+    const n = /^[1-9]$/.test(k) ? +k - 1 : /^[a-i]$/.test(k) ? k.charCodeAt(0) - 97 : -1;
+    if (n < 0) return;
+    const open = [...document.querySelectorAll('.q-card.q-mc:not(.locked)')].filter(c => c.offsetParent);
+    if (open.length !== 1) return;
+    const opt = open[0].querySelectorAll('.opt')[n];
+    if (opt) opt.click();
+  });
+
+  // theme
+  const themeBtn = document.getElementById('theme');
+  const setTheme = t => { document.documentElement.dataset.theme = t; try { localStorage.setItem(KEY + '-theme', t); } catch (e) { /* ignore */ } };
+  try { const t = localStorage.getItem(KEY + '-theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) { /* ignore */ }
+  if (themeBtn) themeBtn.onclick = () => setTheme((document.documentElement.dataset.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')) === 'dark' ? 'light' : 'dark');
+  const sb = document.getElementById('save-badge');
+  if (sb) sb.onclick = () => (!CLOUD && pendingHandle && !fileHandle ? resumeFile() : go('#/save'));
+
+  route();
+  // signed in: fetch what other devices saved, then redraw unless a question is already on screen
+  if (syncCode) pushSync().then(() => { if (!document.querySelector('.q-card')) route(); });
+})();
+
+</script>
+</body>
+</html>
