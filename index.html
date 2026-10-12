@@ -222,6 +222,11 @@ h3 { font-size: 17px; margin: 18px 0 6px; }
   body { background: #fff; }
 }
 
+.signin-note { display: block; margin: 18px 0 0; padding: 11px 14px; border: 1px solid var(--mid); background: var(--mid-soft); color: var(--ink); border-radius: var(--radius); text-decoration: none; }
+.login { margin-bottom: 14px; }
+.login-form { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.login-form .ans-input { max-width: 220px; font-family: inherit; }
+
 </style>
 </head>
 <body>
@@ -839,6 +844,64 @@ h3 { font-size: 17px; margin: 18px 0 6px; }
   else root.Gen = api;
 })(typeof window !== 'undefined' ? window : globalThis);
 
+// Merging two copies of a progress document. Shared by the page (window.Merge) and the sync
+// endpoint (cloud/lib/merge.cjs is a copy made by build.py), so both sides agree.
+(function (root) {
+  'use strict';
+  const blank = () => ({ v: 1, q: {}, sec: {}, flags: {}, drills: {}, mocks: [], last: null, updated: 0, resetAt: 0 });
+
+  function tidy(p) {
+    for (const k of ['q', 'sec', 'flags', 'drills']) if (!p[k] || typeof p[k] !== 'object' || Array.isArray(p[k])) p[k] = {};
+    if (!Array.isArray(p.mocks)) p.mocks = [];
+    return p;
+  }
+
+  // "Reset all progress" at time R: forget everything recorded before it, on every device.
+  function drop(p, R) {
+    if ((p.resetAt || 0) >= R) return;
+    for (const k in p.q) if ((p.q[k].t || 0) <= R) delete p.q[k];
+    for (const k in p.flags) if ((p.flags[k].t || 0) <= R) delete p.flags[k];
+    p.mocks = p.mocks.filter(m => (m.t || 0) > R);
+    p.sec = {}; p.drills = {}; p.last = null; p.resetAt = R;
+  }
+
+  // Merge b into a, in place (objects already in a keep their identity). Returns a.
+  // Per question and per flag the most recent record wins; parts read and checkpoint bests only grow.
+  function merge(a, b) {
+    tidy(a);
+    if (!b || typeof b !== 'object') return a;
+    b = tidy(JSON.parse(JSON.stringify(b)));
+    const R = Math.max(a.resetAt || 0, b.resetAt || 0);
+    if (R) { drop(a, R); drop(b, R); }
+
+    for (const k in b.q) if (!a.q[k] || (b.q[k].t || 0) > (a.q[k].t || 0)) a.q[k] = b.q[k];
+    for (const k in b.flags) if (!a.flags[k] || (b.flags[k].t || 0) > (a.flags[k].t || 0)) a.flags[k] = b.flags[k];
+    for (const k in b.sec) {
+      const x = a.sec[k] || (a.sec[k] = { parts: {}, cp: null }), y = b.sec[k] || {};
+      if (!x.parts) x.parts = {};
+      Object.assign(x.parts, y.parts || {});
+      if (y.cp) {
+        const xn = x.cp ? x.cp.n || 0 : 0, yn = y.cp.n || 0;
+        x.cp = { best: Math.max(y.cp.best || 0, x.cp ? x.cp.best || 0 : 0), last: !x.cp || yn >= xn ? y.cp.last : x.cp.last, n: Math.max(xn, yn) };
+      }
+    }
+    for (const k in b.drills) {
+      if (!a.drills[k]) a.drills[k] = b.drills[k];
+      else if ((b.drills[k].n || 0) > (a.drills[k].n || 0)) Object.assign(a.drills[k], b.drills[k]);
+    }
+    const seen = new Set(a.mocks.map(m => m.t));
+    b.mocks.forEach(m => { if (!seen.has(m.t)) a.mocks.push(m); });
+    a.mocks.sort((m, n) => (m.t || 0) - (n.t || 0));
+    if (b.last && (!a.last || (b.updated || 0) > (a.updated || 0))) a.last = b.last;
+    a.updated = Math.max(a.updated || 0, b.updated || 0);
+    return a;
+  }
+
+  const api = { blank, merge };
+  if (typeof module !== 'undefined' && module.exports) module.exports = api;
+  else root.Merge = api;
+})(typeof window !== 'undefined' ? window : globalThis);
+
 (function () {
   'use strict';
   const DATA = window.__DATA__;
@@ -906,35 +969,26 @@ h3 { font-size: 17px; margin: 18px 0 6px; }
   const TOTAL_PARTS = SECS.reduce((n, s) => n + s.chunks.length, 0);
 
   // ---------- progress ----------
-  const blank = () => ({ v: 1, q: {}, sec: {}, flags: {}, drills: {}, mocks: [], last: null, updated: 0 });
+  const blank = Merge.blank;
+  const ls = {
+    get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+    set(k, v) { try { if (v == null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch (e) { /* private mode */ } },
+  };
   function load() {
-    try { return Object.assign(blank(), JSON.parse(localStorage.getItem(KEY) || '{}')); } catch (e) { return blank(); }
+    try { return Merge.merge(blank(), JSON.parse(ls.get(KEY) || '{}')); } catch (e) { return blank(); }
   }
   let P = load();
   const secState = id => P.sec[id] || (P.sec[id] = { parts: {}, cp: null });
-
-  function mergeIn(o) {
-    if (!o || typeof o !== 'object') return;
-    for (const k in o.q || {}) if (!P.q[k] || (o.q[k].t || 0) > (P.q[k].t || 0)) P.q[k] = o.q[k];
-    for (const k in o.sec || {}) {
-      const a = secState(k), b = o.sec[k] || {};
-      Object.assign(a.parts, b.parts || {});
-      if (b.cp && (!a.cp || b.cp.best > a.cp.best)) a.cp = Object.assign({}, b.cp, { n: Math.max(b.cp.n || 0, (a.cp || {}).n || 0) });
-    }
-    for (const k in o.flags || {}) if (!P.flags[k] || (o.flags[k].t || 0) > (P.flags[k].t || 0)) P.flags[k] = o.flags[k];
-    for (const k in o.drills || {}) if (!P.drills[k] || (o.drills[k].n || 0) > (P.drills[k].n || 0)) P.drills[k] = o.drills[k];
-    const seen = new Set(P.mocks.map(m => m.t));
-    (o.mocks || []).forEach(m => { if (!seen.has(m.t)) P.mocks.push(m); });
-    if (o.last && (!P.last || (o.updated || 0) > (P.updated || 0))) P.last = o.last;
-  }
+  const mergeIn = o => { Merge.merge(P, o); };
 
   // ---------- saving: browser storage always, plus an optional file ----------
   let fileHandle = null, pendingHandle = null, fileNote = '', fileTimer = null;
   const canFile = typeof window.showSaveFilePicker === 'function';
   function persist() {
     P.updated = Date.now();
-    try { localStorage.setItem(KEY, JSON.stringify(P)); } catch (e) { /* private mode: file save still works */ }
+    ls.set(KEY, JSON.stringify(P));
     if (fileHandle) { clearTimeout(fileTimer); fileTimer = setTimeout(writeFile, 700); }
+    scheduleSync();
     badge();
   }
   async function writeFile() {
@@ -988,6 +1042,12 @@ h3 { font-size: 17px; margin: 18px 0 6px; }
   function badge() {
     const el = document.getElementById('save-badge');
     if (!el) return;
+    if (CLOUD) {
+      const at = syncAt ? new Date(syncAt).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }) : '';
+      el.textContent = syncState === 'out' ? '☁ Sign in to save your progress' : syncState === 'ok' ? '☁ Synced ' + at : syncState === 'offline' ? '☁ Offline: kept here, will sync' : '☁ Saving…';
+      el.className = 'save-badge' + (syncState === 'ok' ? ' file' : syncState === 'out' || syncState === 'offline' ? ' pending' : '');
+      return;
+    }
     el.textContent = fileHandle ? '💾 ' + (fileNote || 'Saving to ' + fileHandle.name) : pendingHandle ? '💾 Resume saving to ' + pendingHandle.name : '💾 Saved in this browser';
     el.className = 'save-badge' + (fileHandle ? ' file' : pendingHandle ? ' pending' : '');
   }
@@ -1003,13 +1063,68 @@ h3 { font-size: 17px; margin: 18px 0 6px; }
     badge();
   }).catch(() => {});
 
-  function record(key, ok) {
+  // a = what was answered on the first try (option indexes, typed text, or the written answer)
+  function record(key, ok, a) {
     const p = P.q[key] || { n: 0, r: 0 };
     P.q[key] = { n: p.n + 1, r: p.r + (ok ? 1 : 0), ok: !!ok, t: Date.now() };
+    if (a != null) P.q[key].a = a;
     persist();
   }
   const missedKeys = () => Object.keys(P.q).filter(k => QINDEX[k] && P.q[k].ok === false);
-  const flagCount = () => Object.keys(P.flags).length;
+  // an un-flagged question keeps a tombstone ({off: true}) so the removal reaches other devices
+  const isFlagged = k => !!(P.flags[k] && !P.flags[k].off);
+  const flagKeys = () => Object.keys(P.flags).filter(isFlagged);
+  const flagCount = () => flagKeys().length;
+
+  // ---------- account sync (only on the copy of the site that has a login) ----------
+  const CLOUD = !!DATA.cloud;
+  let syncCode = CLOUD ? ls.get(KEY + '-code') : null, syncUser = ls.get(KEY + '-user') || '';
+  let syncState = syncCode ? 'pending' : 'out', syncAt = 0, syncTimer = null, syncBusy = false, syncDirty = false, retryMs = 4000;
+  function scheduleSync(ms) {
+    if (!syncCode) return;
+    syncDirty = true;
+    if (syncState === 'ok') syncState = 'pending';
+    clearTimeout(syncTimer);
+    syncTimer = setTimeout(pushSync, ms == null ? 1500 : ms);
+  }
+  // One request does both directions: the server merges what we send into what it has and returns the result.
+  async function pushSync() {
+    if (!syncCode || syncBusy) return;
+    syncBusy = true; syncDirty = false;
+    clearTimeout(syncTimer);
+    try {
+      const text = JSON.stringify(P);
+      const r = await fetch('api/progress', { method: 'POST', headers: { 'content-type': 'application/json', 'x-sync-code': syncCode }, body: text, keepalive: text.length < 60000 });
+      if (r.status === 401) signOut('Your login was changed. Sign in again.');
+      else if (!r.ok) throw new Error('http ' + r.status);
+      else { mergeIn(await r.json()); ls.set(KEY, JSON.stringify(P)); syncState = 'ok'; syncAt = Date.now(); retryMs = 4000; }
+    } catch (e) { syncState = 'offline'; syncDirty = true; }
+    syncBusy = false;
+    if (syncDirty && syncCode) { if (syncState !== 'offline') syncState = 'pending'; scheduleSync(syncState === 'offline' ? (retryMs = Math.min(retryMs * 2, 60000)) : 1500); }
+    badge(); navCounts();
+  }
+  async function signIn(username, password) {
+    const r = await fetch('api/login', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ username, password }) });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok || !j.code) throw new Error(j.error || 'Could not sign in. Check your connection and try again.');
+    syncCode = j.code; syncUser = j.username || username;
+    ls.set(KEY + '-code', syncCode); ls.set(KEY + '-user', syncUser);
+    syncState = 'pending';
+    await pushSync();
+    return j;
+  }
+  function signOut(msg) {
+    syncCode = null; ls.set(KEY + '-code', null);
+    syncState = 'out'; clearTimeout(syncTimer);
+    badge();
+    if (msg) toast(msg);
+  }
+  if (CLOUD) {
+    // pick up answers from other devices when the tab comes back, and flush before it goes away
+    document.addEventListener('visibilitychange', () => { if (syncCode) pushSync(); });
+    window.addEventListener('online', () => { if (syncCode) pushSync(); });
+    window.addEventListener('pagehide', () => { if (syncCode && syncDirty) pushSync(); });
+  }
 
   // ---------- one question ----------
   // o: {key, mode:'learn'|'exam', num, next:{label, fn}, onDone, snapshot}
@@ -1031,13 +1146,13 @@ h3 { font-size: 17px; margin: 18px 0 6px; }
       const btn = h('button', { class: 'flag-btn', title: 'Flag this question as wrong, unclear or badly worded', type: 'button' }, '⚑');
       const row = h('div', { class: 'flag-row', hidden: true });
       const note = h('input', { type: 'text', placeholder: 'What is wrong with it? (optional)', class: 'flag-note' });
-      const sync = () => { const on = !!P.flags[fkey]; btn.classList.toggle('on', on); btn.textContent = on ? '⚑ flagged' : '⚑'; row.hidden = !on; if (on) note.value = P.flags[fkey].note || ''; };
+      const sync = () => { const on = isFlagged(fkey); btn.classList.toggle('on', on); btn.textContent = on ? '⚑ flagged' : '⚑'; row.hidden = !on; if (on) note.value = P.flags[fkey].note || ''; };
       btn.onclick = () => {
-        if (P.flags[fkey]) delete P.flags[fkey];
+        if (isFlagged(fkey)) P.flags[fkey] = { t: Date.now(), off: true };
         else P.flags[fkey] = { t: Date.now(), note: '', text: q.q, answer: answerText(q), where: o.key ? o.key : 'drill: ' + (o.drill || '') };
-        persist(); sync(); if (P.flags[fkey]) note.focus();
+        persist(); sync(); if (isFlagged(fkey)) note.focus();
       };
-      note.onchange = note.oninput = () => { if (P.flags[fkey]) { P.flags[fkey].note = note.value; persist(); } };
+      note.onchange = note.oninput = () => { if (isFlagged(fkey)) { P.flags[fkey].note = note.value; P.flags[fkey].t = Date.now(); persist(); } };
       row.append(note);
       setTimeout(() => { head.after(row); sync(); }, 0);
       return btn;
@@ -1063,7 +1178,7 @@ h3 { font-size: 17px; margin: 18px 0 6px; }
       card.classList.add('locked', kind === 'right' || kind === 'self-got' ? 'is-right' : kind === 'retry' || kind === 'self-part' ? 'is-mid' : 'is-wrong');
       card.querySelectorAll('input, textarea, button.opt, button.check').forEach(el => { if (!el.classList.contains('flag-note')) el.disabled = true; });
       card.querySelectorAll('.actions, .try-again, .hint, .self-grade').forEach(el => { el.hidden = true; });
-      if (o.key) record(o.key, ok);
+      if (o.key) record(o.key, ok, st.ans);
       if (card.contains(document.activeElement)) document.activeElement.blur();
       showFeedback(kind);
       if (o.onDone) o.onDone({ ok, kind });
@@ -1093,6 +1208,7 @@ h3 { font-size: 17px; margin: 18px 0 6px; }
       const want = new Set([].concat(q.answer));
       function gradeMc() {
         const ok = Grade.grade(q, multi ? [...chosen] : [...chosen][0]).ok;
+        st.ans = [...chosen];
         btns.forEach(b => {
           const i = +b.getAttribute('data-i');
           if (want.has(i)) b.classList.add('correct');
@@ -1125,7 +1241,9 @@ h3 { font-size: 17px; margin: 18px 0 6px; }
       const showBtn = h('button', { class: 'btn ghost', type: 'button', hidden: true, onclick: () => { paint(true); finalize(false, 'wrong'); } }, 'Show the answer');
       const hint = q.hint ? h('div', { class: 'hint', hidden: true }, md('**Hint:** ' + q.hint, 'inline')) : null;
       const again = h('div', { class: 'try-again', hidden: true }, 'Not yet. Fix it and check again, or show the answer.');
+      const typed = () => rows.map(r => r.inp.value.trim().slice(0, 160));
       function paint(final) {
+        if (final && st.ans == null) st.ans = typed();
         const res = rows.map(r => Grade.checkOne(r.sp, r.inp.value));
         rows.forEach((r, i) => {
           r.mark.textContent = r.inp.value.trim() || final ? (res[i] ? '✓' : '✗') : '';
@@ -1140,7 +1258,7 @@ h3 { font-size: 17px; margin: 18px 0 6px; }
         if (st.done) return;
         if (!rows.some(r => r.inp.value.trim())) return;
         const ok = paint(false);
-        if (st.first === null) st.first = ok;
+        if (st.first === null) { st.first = ok; st.ans = typed(); }
         if (ok) { paint(true); return finalize(st.first, st.first ? 'right' : 'retry'); }
         again.hidden = false; showBtn.hidden = false; if (hint) hint.hidden = false;
         const firstBad = rows.find(r => r.inp.classList.contains('bad') || !r.inp.value.trim());
@@ -1162,10 +1280,11 @@ h3 { font-size: 17px; margin: 18px 0 6px; }
           h('div', { class: 'model-label' }, 'Did yours have these?'),
           h('ul', { class: 'rubric' }, q.rubric.map(r => h('li', {}, h('label', {}, h('input', { type: 'checkbox' }), h('span', { html: MD.renderInline(r) }))))),
           h('div', { class: 'self-grade' },
-            h('button', { class: 'btn good', type: 'button', onclick: () => finalize(true, 'self-got') }, 'Got it'),
-            h('button', { class: 'btn mid', type: 'button', onclick: () => finalize(false, 'self-part') }, 'Partly'),
-            h('button', { class: 'btn bad', type: 'button', onclick: () => finalize(false, 'wrong') }, 'Missed it')));
+            h('button', { class: 'btn good', type: 'button', onclick: () => self('got') }, 'Got it'),
+            h('button', { class: 'btn mid', type: 'button', onclick: () => self('part') }, 'Partly'),
+            h('button', { class: 'btn bad', type: 'button', onclick: () => self('miss') }, 'Missed it')));
       };
+      const self = g => { st.ans = [g, ta.value.trim().slice(0, 900)]; finalize(g === 'got', g === 'got' ? 'self-got' : g === 'part' ? 'self-part' : 'wrong'); };
       show.onclick = open;
       card.append(ta, h('div', { class: 'actions' }, exam ? null : show), model);
       getAnswer = () => open;
@@ -1234,12 +1353,13 @@ h3 { font-size: 17px; margin: 18px 0 6px; }
           h('div', { class: 'meters' },
             meter('Parts read', partsDone, TOTAL_PARTS),
             meter('Questions right', right, TOTAL_Q, seen ? plural(seen, 'question') + ' tried' : null)))),
+      CLOUD && !syncCode ? h('a', { class: 'signin-note', href: '#/save' }, h('b', {}, 'Sign in to save your progress to your account.'), ' Until then it only lives in this browser. →') : null,
       h('nav', { class: 'tools' },
         tool('#/drills', 'Drills', 'Endless practice with fresh numbers'),
         tool('#/missed', 'Missed' + (missed ? ' (' + missed + ')' : ''), 'Redo what you got wrong'),
         tool('#/mock', 'Mock quiz', 'Timed, no feedback until the end'),
         tool('#/cheats', 'Rules to know cold', 'One page, every section'),
-        tool('#/save', 'Saving', fileHandle ? 'Saving to ' + fileHandle.name : 'Back up or move your progress')),
+        tool('#/save', CLOUD ? 'Account' : 'Saving', CLOUD ? (syncCode ? 'Signed in' + (syncUser ? ' as ' + syncUser : '') : 'Sign in to sync') : fileHandle ? 'Saving to ' + fileHandle.name : 'Back up or move your progress')),
       h('h2', { class: 'list-title' }, 'Sections'),
       h('p', { class: 'route' }, h('b', {}, 'Short on time? '), 'All 14 sections are about ' + Math.round(SECS.reduce((n, x) => n + x.minutes, 0) / 60) + ' hours. Do the ★ ones first, in this order: ',
         DATA.route.map((id, i) => { const k = SECS.findIndex(x => x.id === id); return [i ? ' → ' : '', h('a', { href: '#/s/' + id }, String(k + 1))]; }),
@@ -1418,19 +1538,22 @@ h3 { font-size: 17px; margin: 18px 0 6px; }
   }
 
   function flagsView() {
-    const keys = Object.keys(P.flags).sort((a, b) => P.flags[b].t - P.flags[a].t);
+    const keys = flagKeys().sort((a, b) => P.flags[b].t - P.flags[a].t);
     const text = () => keys.map(k => '[' + P.flags[k].where + ']\nNote: ' + (P.flags[k].note || '(none)') + '\nQ: ' + P.flags[k].text + '\nKey: ' + P.flags[k].answer).join('\n\n---\n\n');
     page(simpleHead('Flagged questions', 'Questions you marked as wrong, unclear or badly worded. They are saved with your progress.'),
       keys.length ? h('div', { class: 'result-actions' }, h('button', { class: 'btn', onclick: () => navigator.clipboard.writeText(text()).then(() => toast('Copied.')) }, 'Copy all flags as text')) : h('section', { class: 'result' }, h('p', {}, 'No flags. Use ⚑ on any question.')),
       keys.map(k => h('section', { class: 'q-card' },
-        h('div', { class: 'q-head' }, h('span', { class: 'q-num' }, P.flags[k].where), h('button', { class: 'flag-btn on', onclick: () => { delete P.flags[k]; persist(); flagsView(); } }, 'remove')),
+        h('div', { class: 'q-head' }, h('span', { class: 'q-num' }, P.flags[k].where), h('button', { class: 'flag-btn on', onclick: () => { P.flags[k] = { t: Date.now(), off: true }; persist(); flagsView(); } }, 'remove')),
         md(P.flags[k].text, 'q-text'), h('div', { class: 'ans' }, h('span', {}, 'Key: '), md(P.flags[k].answer, 'inline')),
         P.flags[k].note ? h('p', { class: 'muted' }, 'Your note: ' + P.flags[k].note) : null)));
   }
 
   function saveView() {
-    const top = simpleHead('Saving your progress', 'Progress is saved in this browser automatically, every time you answer. A file is a backup, and the way to move progress to another browser or computer.');
+    const top = simpleHead('Saving your progress', CLOUD
+      ? 'Signed in, every answer is saved to your account as you go and follows you to any device. This browser keeps a copy too, so studying offline still works.'
+      : 'Progress is saved in this browser automatically, every time you answer. A file is a backup, and the way to move progress to another browser or computer.');
     page(top,
+      CLOUD ? loginCard() : null,
       h('section', { class: 'result left' },
         h('h3', {}, 'Save to a file'),
         canFile
@@ -1446,7 +1569,41 @@ h3 { font-size: 17px; margin: 18px 0 6px; }
           h('button', { class: 'btn', onclick: importFile }, 'Import a progress file')),
         h('p', { class: 'muted' }, 'Importing merges: for each question the most recent answer wins, and nothing is lost.'),
         h('h3', {}, 'Start over'),
-        h('div', { class: 'result-actions' }, h('button', { class: 'btn bad', onclick: () => { if (confirm('Erase all progress in this browser?')) { P = blank(); persist(); route(); } } }, 'Reset all progress'))));
+        h('div', { class: 'result-actions' }, h('button', { class: 'btn bad', onclick: () => { if (confirm(syncCode ? 'Erase all progress, in your account and on every device?' : 'Erase all progress in this browser?')) { P = blank(); P.resetAt = Date.now(); persist(); route(); } } }, 'Reset all progress'))));
+  }
+
+  function loginCard() {
+    const box = h('section', { class: 'result left login' });
+    if (syncCode) {
+      const when = syncAt ? 'Last synced ' + new Date(syncAt).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }) + '.' : syncState === 'offline' ? 'Offline right now. Answers are kept in this browser and sent when the connection is back.' : 'Syncing…';
+      add(box, [h('h3', {}, 'Signed in' + (syncUser ? ' as ' + syncUser : '')), h('p', {}, when),
+        h('div', { class: 'result-actions' },
+          h('button', { class: 'btn primary', onclick: () => pushSync().then(() => { toast(syncState === 'ok' ? 'Synced.' : 'Could not reach the server.'); saveView(); }) }, 'Sync now'),
+          h('button', { class: 'btn', onclick: () => { signOut(); saveView(); } }, 'Sign out on this device')),
+        h('p', { class: 'muted' }, 'Signing out keeps the progress in this browser. It stops syncing until you sign in again.')]);
+      return box;
+    }
+    const title = h('h3', {}, 'Sign in');
+    const blurb = h('p', {}, 'Sign in to save your progress to your account.');
+    const user = h('input', { type: 'text', class: 'ans-input', name: 'username', autocomplete: 'username', autocapitalize: 'off', spellcheck: 'false', placeholder: 'username', value: syncUser, required: true });
+    const pass = h('input', { type: 'password', class: 'ans-input', name: 'password', autocomplete: 'current-password', placeholder: 'password', required: true });
+    const err = h('p', { class: 'try-again', hidden: true });
+    const btn = h('button', { class: 'btn primary', type: 'submit' }, 'Sign in');
+    const form = h('form', { class: 'login-form', onsubmit: async e => {
+      e.preventDefault();
+      btn.disabled = true; err.hidden = true;
+      try { const j = await signIn(user.value, pass.value); toast(j.created ? 'Login created. Progress now saves to your account.' : 'Signed in. Progress synced.'); route(); }
+      catch (ex) { err.textContent = ex.message; err.hidden = false; btn.disabled = false; }
+    } }, user, pass, btn);
+    add(box, [title, blurb, form, err]);
+    fetch('api/login').then(r => r.json()).then(j => {
+      if (j.exists) return;
+      title.textContent = 'Create your login';
+      blurb.textContent = 'First time here: pick a username and a password (6 characters or more). That becomes the one login for this site, on every device.';
+      pass.setAttribute('autocomplete', 'new-password');
+      btn.textContent = 'Create login';
+    }).catch(() => {});
+    return box;
   }
 
   function mockView() {
@@ -1502,8 +1659,7 @@ h3 { font-size: 17px; margin: 18px 0 6px; }
   function route() {
     const parts = location.hash.replace(/^#\/?/, '').split('/').filter(Boolean);
     document.querySelectorAll('.topnav a').forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#/' + (parts[0] && parts[0] !== 's' ? parts[0] : '')));
-    const m = document.getElementById('nav-missed');
-    if (m) m.textContent = 'Missed' + (missedKeys().length ? ' (' + missedKeys().length + ')' : '');
+    navCounts();
     badge();
     if (parts[0] === 's') {
       const sec = SECS.find(s => s.id === parts[1]);
@@ -1517,11 +1673,15 @@ h3 { font-size: 17px; margin: 18px 0 6px; }
     if (parts[0] === 'mock') return mockView();
     home();
   }
+  function navCounts() {
+    const m = document.getElementById('nav-missed');
+    if (m) m.textContent = 'Missed' + (missedKeys().length ? ' (' + missedKeys().length + ')' : '');
+  }
   window.addEventListener('hashchange', route);
 
   // Enter = the primary "next" button; A–E / 1–5 pick a multiple-choice option
   document.addEventListener('keydown', e => {
-    const t = e.target, typing = t && (t.tagName === 'TEXTAREA' || (t.tagName === 'INPUT' && t.type === 'text'));
+    const t = e.target, typing = t && (t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || (t.tagName === 'INPUT' && t.type !== 'checkbox'));
     if (e.metaKey || e.ctrlKey || e.altKey) return;
     if (e.key === 'Enter' && t && (t.tagName === 'BUTTON' || t.tagName === 'A')) return;
     if (e.key === 'Enter' && !typing) {
@@ -1545,9 +1705,11 @@ h3 { font-size: 17px; margin: 18px 0 6px; }
   try { const t = localStorage.getItem(KEY + '-theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) { /* ignore */ }
   if (themeBtn) themeBtn.onclick = () => setTheme((document.documentElement.dataset.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')) === 'dark' ? 'light' : 'dark');
   const sb = document.getElementById('save-badge');
-  if (sb) sb.onclick = () => (pendingHandle && !fileHandle ? resumeFile() : go('#/save'));
+  if (sb) sb.onclick = () => (!CLOUD && pendingHandle && !fileHandle ? resumeFile() : go('#/save'));
 
   route();
+  // signed in: fetch what other devices saved, then redraw unless a question is already on screen
+  if (syncCode) pushSync().then(() => { if (!document.querySelector('.q-card')) route(); });
 })();
 
 </script>
